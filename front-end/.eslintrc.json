@@ -19,6 +19,32 @@
         "react"
     ],
     "rules": {
-        "react/jsx-filename-extension": "off"
+        "no-console": "off",
+        "no-alert": "off",
+        "prefer-arrow-callback": "off",
+        "func-names": "off",
+        "no-unused-vars": [
+            "error",
+            {
+                "argsIgnorePattern": "^_",
+                "ignoreRestSiblings": true
+            }
+        ],
+        "react/jsx-filename-extension": [
+            1,
+            {
+                "extensions": [
+                    ".js",
+                    ".jsx"
+                ]
+            }
+        ],
+        "react/prefer-stateless-function": 0,
+        "arrow-parens": [
+            2,
+            "always"
+        ],
+        "jsx-a11y/label-has-associated-control": 0,
+        "react/jsx-props-no-spreading": "off"
     }
 }
