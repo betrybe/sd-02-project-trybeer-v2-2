@@ -1,9 +1,9 @@
 import React from 'react';
 import { render, fireEvent, wait } from '@testing-library/react';
+import axios from 'axios';
 import history from '../services/history';
 import Provider from '../context/TrybeerContext';
 import Profile from '../pages/client/Profile';
-import axios from 'axios';
 
 const usersMock = {
   email: 'jctaraujo@hotmail.com',
@@ -16,7 +16,7 @@ const usersMockWithoutToken = {
   email: 'jctaraujo@hotmail.com',
   name: 'Julio Cezar',
   role: 'client',
-}
+};
 
 const data = {
   data: {
@@ -29,7 +29,7 @@ const dataError = {
     status: 404,
     data: {
       error: {
-        message: 'expired'
+        message: 'expired',
       },
     },
   },
@@ -48,21 +48,21 @@ describe('Testando funcionamento da pagina de profile', () => {
         <Profile />
       </Provider>,
     );
-    expect(queryByTestId("profile-save-btn")).toBeInTheDocument();
-    expect(queryByTestId("profile-save-btn").innerHTML).toBe("Salvar");
-    expect(queryByTestId("profile-save-btn").disabled).toBeTruthy();
-    expect(queryByTestId("profile-name-input")).toBeInTheDocument();
-    expect(queryByTestId("profile-name-input").value).toBe('Julio Cezar');
-    expect(queryByTestId("profile-email-input")).toBeInTheDocument();
-    expect(queryByTestId("profile-email-input").value).toBe('jctaraujo@hotmail.com');
-    expect(queryByTestId("profile-email-input").readOnly).toBeTruthy();
+    expect(queryByTestId('profile-save-btn')).toBeInTheDocument();
+    expect(queryByTestId('profile-save-btn').innerHTML).toBe('Salvar');
+    expect(queryByTestId('profile-save-btn').disabled).toBeTruthy();
+    expect(queryByTestId('profile-name-input')).toBeInTheDocument();
+    expect(queryByTestId('profile-name-input').value).toBe('Julio Cezar');
+    expect(queryByTestId('profile-email-input')).toBeInTheDocument();
+    expect(queryByTestId('profile-email-input').value).toBe('jctaraujo@hotmail.com');
+    expect(queryByTestId('profile-email-input').readOnly).toBeTruthy();
 
-    const inputName = queryByTestId("profile-name-input");
-    const saveBtn = queryByTestId("profile-save-btn");
+    const inputName = queryByTestId('profile-name-input');
+    const saveBtn = queryByTestId('profile-save-btn');
 
     fireEvent.change(inputName, { target: { value: 'Julio' } });
-    expect(queryByTestId("profile-name-input").value).toBe('Julio');
-    expect(queryByTestId("profile-save-btn").disabled).toBeFalsy();
+    expect(queryByTestId('profile-name-input').value).toBe('Julio');
+    expect(queryByTestId('profile-save-btn').disabled).toBeFalsy();
     axios.mockImplementationOnce(() => Promise.resolve(data));
     fireEvent.click(saveBtn);
     await wait();
@@ -72,26 +72,24 @@ describe('Testando funcionamento da pagina de profile', () => {
     localStorage.setItem('user', JSON.stringify(usersMock));
     history.push('/profile');
     const { queryByTestId } = render(
-      <Profile />
+      <Profile />,
     );
-    expect(queryByTestId("profile-save-btn")).toBeInTheDocument();
-    expect(queryByTestId("profile-save-btn").innerHTML).toBe("Salvar");
-    expect(queryByTestId("profile-save-btn").disabled).toBeTruthy();
-    expect(queryByTestId("profile-name-input")).toBeInTheDocument();
-    expect(queryByTestId("profile-name-input").value).toBe('Julio Cezar');
-    expect(queryByTestId("profile-email-input")).toBeInTheDocument();
-    expect(queryByTestId("profile-email-input").value).toBe('jctaraujo@hotmail.com');
-    expect(queryByTestId("profile-email-input").readOnly).toBeTruthy();
+    expect(queryByTestId('profile-save-btn')).toBeInTheDocument();
+    expect(queryByTestId('profile-save-btn').innerHTML).toBe('Salvar');
+    expect(queryByTestId('profile-save-btn').disabled).toBeTruthy();
+    expect(queryByTestId('profile-name-input')).toBeInTheDocument();
+    expect(queryByTestId('profile-name-input').value).toBe('Julio Cezar');
+    expect(queryByTestId('profile-email-input')).toBeInTheDocument();
+    expect(queryByTestId('profile-email-input').value).toBe('jctaraujo@hotmail.com');
+    expect(queryByTestId('profile-email-input').readOnly).toBeTruthy();
 
-    const inputName = queryByTestId("profile-name-input");
-    const saveBtn = queryByTestId("profile-save-btn");
+    const inputName = queryByTestId('profile-name-input');
+    const saveBtn = queryByTestId('profile-save-btn');
 
     fireEvent.change(inputName, { target: { value: 'Julio' } });
-    expect(queryByTestId("profile-name-input").value).toBe('Julio');
-    expect(queryByTestId("profile-save-btn").disabled).toBeFalsy();
-    axios.mockImplementationOnce(() =>
-      Promise.reject(dataError),
-    );
+    expect(queryByTestId('profile-name-input').value).toBe('Julio');
+    expect(queryByTestId('profile-save-btn').disabled).toBeFalsy();
+    axios.mockImplementationOnce(() => Promise.reject(dataError));
     fireEvent.click(saveBtn);
     await wait();
     expect(history.location.pathname).toBe('/login');

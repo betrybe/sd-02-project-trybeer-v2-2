@@ -2,7 +2,7 @@ import React from 'react';
 import { Router, Switch, Route } from 'react-router-dom';
 import Login from './pages/Login';
 import AdminOrders from './pages/admin/Orders';
-import AdminOrdersDetails from './pages/admin/OrderDetails'
+import AdminOrdersDetails from './pages/admin/OrderDetails';
 import AdminProfile from './pages/admin/Profile';
 import ClientProducts from './pages/client/Products';
 import history from './services/history';

@@ -24,7 +24,7 @@ const dataError = {
     status: 404,
     data: {
       error: {
-        message: 'No sale was found.'
+        message: 'No sale was found.',
       },
     },
   },
@@ -33,35 +33,35 @@ const dataError = {
 const orderMock = {
   data: [
     {
-      "saleId": 7,
-      "name": "Antarctica Pilsen 300ml",
-      "quantity": "9",
-      "price": 2.49,
-      "totalPrice": 49.35,
-      "saleDate": 1596225935000,
-      "formattedPrice": 'R$&nbsp;2,49',
-      "formattedTotalPrice": 'R$&nbsp;49,35',
-      "totalProduct": 'R$&nbsp;22,41'
+      saleId: 7,
+      name: 'Antarctica Pilsen 300ml',
+      quantity: '9',
+      price: 2.49,
+      totalPrice: 49.35,
+      saleDate: 1596225935000,
+      formattedPrice: 'R$&nbsp;2,49',
+      formattedTotalPrice: 'R$&nbsp;49,35',
+      totalProduct: 'R$&nbsp;22,41',
     },
     {
-      "saleId": 7,
-      "name": "Skol Beats Senses 313ml",
-      "quantity": "6",
-      "price": 4.49,
-      "totalPrice": 49.35,
-      "saleDate": 1596225935000,
-      "formattedPrice": 'R$&nbsp;4,49',
-      "formattedTotalPrice": 'R$&nbsp;49,35',
-      "totalProduct": 'R$&nbsp;26,94'
-    }
-  ]
+      saleId: 7,
+      name: 'Skol Beats Senses 313ml',
+      quantity: '6',
+      price: 4.49,
+      totalPrice: 49.35,
+      saleDate: 1596225935000,
+      formattedPrice: 'R$&nbsp;4,49',
+      formattedTotalPrice: 'R$&nbsp;49,35',
+      totalProduct: 'R$&nbsp;26,94',
+    },
+  ],
 };
 
 jest.mock('axios');
 
 beforeEach(() => {
   cleanup();
-  localStorage.clear()
+  localStorage.clear();
 });
 
 const orderId = 7;
@@ -75,7 +75,7 @@ describe('Testing Order Details Page', () => {
     const { queryByTestId } = render(
       <Provider>
         <OrderDetails match={{ params: { id: orderId } }} />
-      </Provider>
+      </Provider>,
     );
     await wait();
 
@@ -96,8 +96,8 @@ describe('Testing Order Details Page', () => {
       expect(queryByTestId(`${index}-product-name`).innerHTML).toBe(order.name);
       expect(queryByTestId(`${index}-product-total-value`)).toBeInTheDocument();
       expect(queryByTestId(`${index}-product-total-value`).innerHTML).toBe(order.totalProduct);
-    })
-  })
+    });
+  });
 
   test('if axios is rejected', async () => {
     localStorage.setItem('user', JSON.stringify(usersMock));
@@ -105,7 +105,7 @@ describe('Testing Order Details Page', () => {
     const { getByText } = render(
       <Provider>
         <OrderDetails match={{ params: { id: orderId } }} />
-      </Provider>
+      </Provider>,
     );
     await wait();
     expect(getByText('Loading...')).toBeInTheDocument();
@@ -117,7 +117,7 @@ describe('Testing Order Details Page', () => {
     render(
       <Provider>
         <OrderDetails match={{ params: { id: orderId } }} />
-      </Provider>
+      </Provider>,
     );
     await wait();
     expect(history.location.pathname).toBe('/login');

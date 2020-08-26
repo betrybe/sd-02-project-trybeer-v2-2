@@ -14,9 +14,9 @@ describe('testing top menu dont display', () => {
         <Provider>
           <TopMenu />
         </Provider>
-      </Router>
+      </Router>,
     );
-    expect(queryByTestId("top-title")).toBeNull();
+    expect(queryByTestId('top-title')).toBeNull();
   });
   test('if top menu dont display at route /register', () => {
     history.push('/register');
@@ -25,9 +25,9 @@ describe('testing top menu dont display', () => {
         <Provider>
           <TopMenu />
         </Provider>
-      </Router>
+      </Router>,
     );
-    expect(queryByTestId("top-title")).toBeNull();
+    expect(queryByTestId('top-title')).toBeNull();
   });
   test('if top menu dont display at route /admin/profile', () => {
     history.push('/admin/profile');
@@ -36,9 +36,9 @@ describe('testing top menu dont display', () => {
         <Provider>
           <TopMenu />
         </Provider>
-      </Router>
+      </Router>,
     );
-    expect(queryByTestId("top-title")).toBeNull();
+    expect(queryByTestId('top-title')).toBeNull();
   });
   test('if top menu dont display at route /admin/orders', () => {
     history.push('/admin/orders');
@@ -47,9 +47,9 @@ describe('testing top menu dont display', () => {
         <Provider>
           <TopMenu />
         </Provider>
-      </Router>
+      </Router>,
     );
-    expect(queryByTestId("top-title")).toBeNull();
+    expect(queryByTestId('top-title')).toBeNull();
   });
 });
 
@@ -61,10 +61,10 @@ describe('if top menu display', () => {
         <Provider>
           <TopMenu />
         </Provider>
-      </Router>
+      </Router>,
     );
-    expect(queryByTestId("top-title")).toBeInTheDocument();
-    expect(queryByTestId("top-title").innerHTML).toBe('TryBeer');
+    expect(queryByTestId('top-title')).toBeInTheDocument();
+    expect(queryByTestId('top-title').innerHTML).toBe('TryBeer');
   });
   test('if display at /orders', () => {
     history.push('/orders');
@@ -73,10 +73,10 @@ describe('if top menu display', () => {
         <Provider>
           <TopMenu />
         </Provider>
-      </Router>
+      </Router>,
     );
-    expect(queryByTestId("top-title")).toBeInTheDocument();
-    expect(queryByTestId("top-title").innerHTML).toBe('Meus Pedidos');
+    expect(queryByTestId('top-title')).toBeInTheDocument();
+    expect(queryByTestId('top-title').innerHTML).toBe('Meus Pedidos');
   });
   test('if display at /orders/:orderId', () => {
     history.push('/orders/1');
@@ -85,10 +85,10 @@ describe('if top menu display', () => {
         <Provider>
           <TopMenu />
         </Provider>
-      </Router>
+      </Router>,
     );
-    expect(queryByTestId("top-title")).toBeInTheDocument();
-    expect(queryByTestId("top-title").innerHTML).toBe('Detalhes de Pedido');
+    expect(queryByTestId('top-title')).toBeInTheDocument();
+    expect(queryByTestId('top-title').innerHTML).toBe('Detalhes de Pedido');
   });
   test('if display at /profile', () => {
     history.push('/profile');
@@ -97,10 +97,10 @@ describe('if top menu display', () => {
         <Provider>
           <TopMenu />
         </Provider>
-      </Router>
+      </Router>,
     );
-    expect(queryByTestId("top-title")).toBeInTheDocument();
-    expect(queryByTestId("top-title").innerHTML).toBe('Meu perfil');
+    expect(queryByTestId('top-title')).toBeInTheDocument();
+    expect(queryByTestId('top-title').innerHTML).toBe('Meu perfil');
   });
   test('if display at /checkout', () => {
     history.push('/checkout');
@@ -109,10 +109,10 @@ describe('if top menu display', () => {
         <Provider>
           <TopMenu />
         </Provider>
-      </Router>
+      </Router>,
     );
-    expect(queryByTestId("top-title")).toBeInTheDocument();
-    expect(queryByTestId("top-title").innerHTML).toBe('Finalizar Pedido');
+    expect(queryByTestId('top-title')).toBeInTheDocument();
+    expect(queryByTestId('top-title').innerHTML).toBe('Finalizar Pedido');
   });
 });
 
@@ -125,7 +125,7 @@ describe('display side bar after click hamburguer menu', () => {
           <TopMenu />
           <ClientSideBar />
         </Provider>
-      </Router>
+      </Router>,
     );
     const hamburguerButton = queryByTestId('top-hamburguer');
     fireEvent.click(hamburguerButton);

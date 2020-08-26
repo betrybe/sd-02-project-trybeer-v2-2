@@ -1,5 +1,5 @@
 import React, { createContext, useState } from 'react';
-import PropTypes from 'prop-types';
+import { instanceOf } from 'prop-types';
 
 export const TrybeerContext = createContext();
 
@@ -19,5 +19,5 @@ export default function TrybeerProvider({ children }) {
 }
 
 TrybeerProvider.propTypes = {
-  children: PropTypes.instanceOf(Object).isRequired,
+  children: instanceOf(Object).isRequired,
 };

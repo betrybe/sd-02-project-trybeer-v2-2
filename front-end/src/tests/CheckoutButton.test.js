@@ -19,8 +19,8 @@ describe('Test checkout button component', () => {
     const { queryByTestId } = render(
       <TrybeerContext.Provider value={storeMock}>
         <CheckoutButton />
-      </TrybeerContext.Provider>
-    );    
+      </TrybeerContext.Provider>,
+    );
     expect(queryByTestId('checkout-bottom-btn').disabled).toBeFalsy();
     fireEvent.click(queryByTestId('checkout-bottom-btn'));
     expect(history.location.pathname).toBe('/checkout');

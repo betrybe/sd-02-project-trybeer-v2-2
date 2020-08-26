@@ -1,12 +1,12 @@
 import React from 'react';
-import history  from '../services/history';
-import '../styles/OrdersCard.css'
+import history from '../services/history';
+import '../styles/OrdersCard.css';
 import formatDateFunc from '../services/formatDateFunc';
 import formatPriceFunc from '../services/formatPriceFunc';
 
 const redirectToDetailsPage = (orderId) => {
-  history.push(`/orders/${orderId}`)
-}
+  history.push(`/orders/${orderId}`);
+};
 
 const OrdersCard = ({ orders, index }) => {
   const formattedPrice = formatPriceFunc(orders.totalPrice);
@@ -14,8 +14,10 @@ const OrdersCard = ({ orders, index }) => {
 
   return (
     <button
-      type="button" className="order-card-container"
-      onClick={() => redirectToDetailsPage(orders.saleId)}>
+      type="button"
+      className="order-card-container"
+      onClick={() => redirectToDetailsPage(orders.saleId)}
+    >
       <div className="order-card-top-content">
         <div data-testid={`${index}-order-number`} className="order-card-text">
           {`Pedido ${orders.saleId}`}

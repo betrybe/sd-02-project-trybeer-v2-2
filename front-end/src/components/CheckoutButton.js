@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
-import { TrybeerContext } from '../context/TrybeerContext'
+import { TrybeerContext } from '../context/TrybeerContext';
 import useRefreshTotalPrice from '../hooks/useRefreshTotalPrice';
 import history from '../services/history';
 import '../styles/CheckoutButton.css';
 
-export default function CheckoutButton () {
-  const { shopCart: [totalQty] } = useContext(TrybeerContext)
+export default function CheckoutButton() {
+  const { shopCart: [totalQty] } = useContext(TrybeerContext);
   const totalPrice = useRefreshTotalPrice(totalQty);
 
   return (
@@ -14,8 +14,9 @@ export default function CheckoutButton () {
         type="button"
         data-testid="checkout-bottom-btn"
         className="checkout-bottom-btn"
-        onClick={(()=> history.push('/checkout'))}
-        disabled={!totalPrice}>
+        onClick={(() => history.push('/checkout'))}
+        disabled={!totalPrice}
+      >
         <div className="cart-link-container">
           Ver Carrinho
           <div className="total-qty-span-container">
@@ -26,5 +27,5 @@ export default function CheckoutButton () {
         </div>
       </button>
     </div>
-  )
+  );
 }

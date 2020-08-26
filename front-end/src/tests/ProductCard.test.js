@@ -10,14 +10,14 @@ const product = {
   name: 'Skol',
   price: 3.33,
   urlImage: 'localhost:3001/Skol',
-}
+};
 
 describe('test product card component', () => {
   test('if product card component is rendering correctly', () => {
     const { queryByTestId } = render(
       <Provider>
         <ProductCard product={product} index={index} />
-      </Provider>
+      </Provider>,
     );
     expect(queryByTestId(`${index}-product-img`)).toBeInTheDocument();
     expect(queryByTestId(`${index}-product-img`).tagName).toBe('IMG');

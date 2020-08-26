@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import useRefreshTotalPrice from '../../hooks/useRefreshTotalPrice';
 import history from '../../services/history';
-import axios from 'axios';
 import '../../styles/Checkout.css';
 
 const formatPrice = (totalPrice) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(totalPrice);
@@ -15,38 +15,37 @@ const interactiveFormField = (formName, label, type, formValidation) => (
       id={formName}
       className="form-field"
       data-testid={formName}
-      onChange={(e) => formValidation(e.target.value)}/>
+      onChange={(e) => formValidation(e.target.value)}
+    />
   </label>
 );
 
 const sendProducts = async (deliveryAddress, deliveryNumber, setSalesStatus) => {
-  const productsData = JSON.parse(localStorage.getItem('cart')).map(({ id: productId, itemQty: quantity }) => {
-    return { productId, quantity }});
+  const productsData = JSON.parse(localStorage.getItem('cart')).map(({ id: productId, itemQty: quantity }) => ({ productId, quantity }));
 
-  const salesObject = { products: productsData, deliveryAddress, deliveryNumber}
+  const salesObject = { products: productsData, deliveryAddress, deliveryNumber };
 
   const { token } = JSON.parse(localStorage.getItem('user'));
 
   let error;
 
   const salesRequest = await axios({
-  baseURL: `http://localhost:3001/sales`,
-  method: 'post',
-  headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': token },
-  data: salesObject
+    baseURL: 'http://localhost:3001/sales',
+    method: 'post',
+    headers: { Accept: 'application/json', 'Content-Type': 'application/json', Authorization: token },
+    data: salesObject,
   })
-  .catch(({ response: { status, data: { error: { message }}} }) => {
-    error = 1;
-    return statusHandler({ status, message }, setSalesStatus);
-  });
+    .catch(({ response: { status, data: { error: { message } } } }) => {
+      error = 1;
+      return statusHandler({ status, message }, setSalesStatus);
+    });
 
-  if (error !== 1) return statusHandler(salesRequest, setSalesStatus)
+  if (error !== 1) return statusHandler(salesRequest, setSalesStatus);
   return null;
-}
-
+};
 
 const statusHandler = ({ status, message }, setSalesStatus) => {
-  let divStyleError = {
+  const divStyleError = {
     fontSize: 'smaller',
     display: 'inline-block',
     background: 'red',
@@ -54,7 +53,7 @@ const statusHandler = ({ status, message }, setSalesStatus) => {
     fontWeight: '800',
   };
 
-  let divStyleSucess = {
+  const divStyleSucess = {
     display: 'flex',
     flexFlow: 'row nowrap',
     alignItems: 'center',
@@ -74,43 +73,51 @@ const statusHandler = ({ status, message }, setSalesStatus) => {
     animationFillMode: 'forwards',
   };
 
-  if(status === 201) {
+  if (status === 201) {
     setTimeout(() => {
       localStorage.removeItem('cart');
-      return history.push('/products')
-    }, 2000)
+      return history.push('/products');
+    }, 2000);
 
     return setSalesStatus(
       <div style={divStyleSucess} className="sales-status-container">
-        <span>{`Compra realizada com sucesso!`}</span>
-      </div>
-    )
+        <span>Compra realizada com sucesso!</span>
+      </div>,
+    );
   }
 
   return setSalesStatus(
     <div style={divStyleError} className="sales-status-container">
       <span>{`Erro código: ${status}, ${message}`}</span>
-    </div>
-  )
-}
+    </div>,
+  );
+};
 
 const removeItem = (itemId, setCartData) => {
   const actualCart = JSON.parse(localStorage.getItem('cart')) ? JSON.parse(localStorage.getItem('cart')) : null;
-  if(actualCart !== null) {
-    const newCart = actualCart.filter(({ id }) => id !== itemId)
+  if (actualCart !== null) {
+    const newCart = actualCart.filter(({ id }) => id !== itemId);
     if (String(newCart) === '') {
       localStorage.removeItem('cart');
-      return setCartData(null)
+      return setCartData(null);
     }
     localStorage.removeItem('cart');
     localStorage.setItem('cart', JSON.stringify(newCart));
     return setCartData(newCart);
   }
   return setCartData(null);
-}
+};
 
-const renderFormElements = ([setAdressValue, setStreetNumber, addressValue, streetNumber, salesStatus, setSalesStatus, totalPrice]) => (
-  <div className="address-form-container" >
+const renderFormElements = ([
+  setAdressValue,
+  setStreetNumber,
+  addressValue,
+  streetNumber,
+  salesStatus,
+  setSalesStatus,
+  totalPrice,
+]) => (
+  <div className="address-form-container">
     <div className="address-header-container">
       <h3>Endereço</h3>
       <div>{salesStatus}</div>
@@ -123,12 +130,13 @@ const renderFormElements = ([setAdressValue, setStreetNumber, addressValue, stre
         data-testid="checkout-finish-btn"
         className="checkout-finish-btn"
         onClick={() => sendProducts(addressValue, streetNumber, setSalesStatus)}
-        disabled={!(addressValue && streetNumber && totalPrice)}>
-          Finalizar Pedido
+        disabled={!(addressValue && streetNumber && totalPrice)}
+      >
+        Finalizar Pedido
       </button>
     </form>
   </div>
-)
+);
 
 const renderProductsList = (cartData, setCartData, totalPrice) => (
   <div className="checkout-products-container">
@@ -137,14 +145,16 @@ const renderProductsList = (cartData, setCartData, totalPrice) => (
     </div>
     <div className="products-list-container">
       <ul>
-        {cartData ? cartData.map(({ id, itemQty, name, price, totalValue }, index) => (
+        {cartData ? cartData.map(({
+          id, itemQty, name, price, totalValue,
+        }, index) => (
           <li key={name} className="product-item">
             <span data-testid={`${index}-product-qtd-input`} className="span-itemQty">{itemQty}</span>
             <span data-testid={`${index}-product-name`}>{`- ${name}`}</span>
-            <span className="spacing-span"></span>
+            <span className="spacing-span" />
             <span className="span-total-product-price" data-testid={`${index}-product-total-value`}>{`${formatPrice(totalValue)}`}</span>
             <span className="span-unit-price">{`(${formatPrice(price)} un)`}</span>
-            <button className="item-removal-button" onClick={() => removeItem(id, setCartData)}>X</button>
+            <button type="button" className="item-removal-button" onClick={() => removeItem(id, setCartData)}>X</button>
           </li>
         )) : <h2>Não há produtos no carrinho</h2>}
       </ul>
@@ -153,7 +163,7 @@ const renderProductsList = (cartData, setCartData, totalPrice) => (
       <span data-testid="order-total-value">{`Total: ${formatPrice(totalPrice)}`}</span>
     </div>
   </div>
-)
+);
 
 export default function Checkout() {
   const [cartData, setCartData] = useState([]);
@@ -166,9 +176,9 @@ export default function Checkout() {
     const isUserLogged = JSON.parse(localStorage.getItem('user'));
     if (isUserLogged === null) return history.push('/login');
 
-    const getAddressInfoFromLocalStorage = () => JSON.parse(localStorage.getItem('cart')) ? JSON.parse(localStorage.getItem('cart')) : null;
+    const getAddressInfoFromLocalStorage = () => (JSON.parse(localStorage.getItem('cart')) ? JSON.parse(localStorage.getItem('cart')) : null);
     const actualCart = getAddressInfoFromLocalStorage();
-    if(!actualCart || actualCart.length === 0) {
+    if (!actualCart || actualCart.length === 0) {
       setCartData(null);
       localStorage.removeItem('cart');
     }
@@ -178,7 +188,15 @@ export default function Checkout() {
   return (
     <div className="checkout-page-container">
       {renderProductsList(cartData, setCartData, totalPrice)}
-      {renderFormElements([setAdressValue, setStreetNumber, addressValue, streetNumber, salesStatus, setSalesStatus, totalPrice])}
+      {renderFormElements([
+        setAdressValue,
+        setStreetNumber,
+        addressValue,
+        streetNumber,
+        salesStatus,
+        setSalesStatus,
+        totalPrice,
+      ])}
     </div>
   );
 }

@@ -10,29 +10,28 @@ const redirectButton = (setShowSideMenu, route) => {
   history.push(`${route}`);
 };
 
-
 const SideBar = () => {
   const { sideMenu: [showSideMenu, setShowSideMenu] } = useContext(TrybeerContext);
   return (!showSideMenu) || (
     <div className="side-menu-container">
       <div className="side-menu-top-container">
-        <button data-testid="side-menu-item-products" onClick={() => redirectButton(setShowSideMenu, '/products')}>
+        <button type="button" data-testid="side-menu-item-products" onClick={() => redirectButton(setShowSideMenu, '/products')}>
           Produtos
         </button>
-        <button data-testid="side-menu-item-my-orders" onClick={() => redirectButton(setShowSideMenu, '/orders')}>
+        <button type="button" data-testid="side-menu-item-my-orders" onClick={() => redirectButton(setShowSideMenu, '/orders')}>
           Meus Pedidos
         </button>
-        <button data-testid="side-menu-item-my-profile" onClick={() => redirectButton(setShowSideMenu, '/profile')}>
+        <button type="button" data-testid="side-menu-item-my-profile" onClick={() => redirectButton(setShowSideMenu, '/profile')}>
           Meu Perfil
         </button>
       </div>
       <div className="side-menu-bot-container">
-        <button data-testid="side-menu-item-logout" onClick={() => redirectButton(setShowSideMenu, '/login')}>
+        <button type="button" data-testid="side-menu-item-logout" onClick={() => redirectButton(setShowSideMenu, '/login')}>
           Sair
         </button>
       </div>
     </div>
-  )
+  );
 };
 
 export default SideBar;

@@ -6,10 +6,8 @@ import AdminSideBar from '../../components/admin/AdminSideBar';
 export default function AdminProfile() {
   const isLoggedIn = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
   useEffect(() => {
-    // console.log(isLoggedIn);
-
-    if (!isLoggedIn) history.push('/login')
-  }, [isLoggedIn])
+    if (!isLoggedIn) history.push('/login');
+  }, [isLoggedIn]);
   if (!isLoggedIn) return null;
   const { name, email } = isLoggedIn;
   return (
@@ -34,5 +32,5 @@ export default function AdminProfile() {
         <p data-testid="side-menu-item-logout" onClick={() => history.push('/login')}>Sair</p>
       </div>
     </div>
-  )
+  );
 }

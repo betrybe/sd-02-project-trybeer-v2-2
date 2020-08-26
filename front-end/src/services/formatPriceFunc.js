@@ -1,4 +1,4 @@
 export default (totalPrice) => new Intl.NumberFormat(
   'pt-BR',
-  { style: 'currency', currency: 'BRL' }
+  { style: 'currency', currency: 'BRL' },
 ).format(totalPrice);

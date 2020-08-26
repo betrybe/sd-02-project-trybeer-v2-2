@@ -19,12 +19,12 @@ beforeEach(() => {
 });
 
 describe('Tests for Admin Profile', () => {
-  test  ('Verify HTML elements appears on page', () => {
+  test('Verify HTML elements appears on page', () => {
     localStorage.setItem('user', JSON.stringify(administratorUser));
     const { queryByTestId } = render(
       <Provider>
         <Profile />
-      </Provider>
+      </Provider>,
     );
 
     const userName = queryByTestId('profile-name');
@@ -52,7 +52,7 @@ describe('Tests for Admin Profile', () => {
   test('Verify lateral side bar funcionatily buttons', () => {
     localStorage.setItem('user', JSON.stringify(administratorUser));
     const { queryByTestId } = render(
-      <Profile />
+      <Profile />,
     );
 
     const ordersLink = queryByTestId('side-menu-item-orders');

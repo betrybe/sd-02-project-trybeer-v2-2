@@ -7,11 +7,11 @@ const sendRequestOrdersDetails = async (saleId, setErrorStatus) => {
   const { token } = JSON.parse(localStorage.getItem('user'));
   if (!token) {
     history.push('/login');
-  };
+  }
   const resp = await axios({
     baseURL: `http://localhost:3001/sales/${saleId}`,
     method: 'get',
-    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': token }
+    headers: { Accept: 'application/json', 'Content-Type': 'application/json', Authorization: token },
   })
     .catch(({ response: { status, data: { error: { message } } } }) => setErrorStatus(`Error: ${status}. ${message}`));
   if (resp) return resp.data;
@@ -27,7 +27,7 @@ const OrderDetails = ({ match: { params: { orderId } } }) => {
     if (!isLSExist || !isLSExist.token) history.push('/login');
     const fetchOrderDetails = async () => {
       setData(await sendRequestOrdersDetails(orderId, setErrorStatus));
-    }
+    };
     fetchOrderDetails();
   }, [orderId, setErrorStatus]);
 

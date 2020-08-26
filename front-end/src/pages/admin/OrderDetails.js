@@ -1,23 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import history from '../../services/history';
 import axios from 'axios';
+import history from '../../services/history';
 import checkLogin from '../../services/checkLogin';
-import { getStatusColor } from '../../components/admin/OrderCard'
+import { getStatusColor } from '../../components/admin/OrderCard';
 import formatPriceFunc from '../../services/formatPriceFunc';
 import '../../styles/AdminOrderDetails.css';
 import AdminSideBar from '../../components/admin/AdminSideBar';
 
-const setStatusAsDelivered = async (saleId, token, setOrderDetails) => await axios({
+const setStatusAsDelivered = async (saleId, token, setOrderDetails) => axios({
   method: 'patch',
   baseURL: `http://localhost:3001/sales/${saleId}`,
-  headers: { 'Accept': 'application/json', 'Authorization': token }
+  headers: { Accept: 'application/json', Authorization: token },
 })
   .catch((err) => console.error(err.response))
   .then(() => setOrderDetails((prevValues) => (
     {
       orderDetails: [...prevValues.orderDetails.map(
-        (product) => ({ ...product, status: 'Entregue' })
-      )]
+        (product) => ({ ...product, status: 'Entregue' }),
+      )],
     }
   )));
 
@@ -49,11 +49,15 @@ const renderProductData = (saleId, status, orderDetails, totalPrice) => (
       </div>
     </div>
   </>
-)
+);
 
 export default function AdminOrdersDetails() {
-  const [{ orderDetails, orderDetails: [{ totalPrice, status, saleId }] }, setOrderDetails] = useState(
-    { orderDetails: [{ totalPrice: 0, status: 'Pendente', saleId: 0 }] }
+  const [
+    {
+      orderDetails,
+      orderDetails: [{ totalPrice, status, saleId }],
+    }, setOrderDetails] = useState(
+    { orderDetails: [{ totalPrice: 0, status: 'Pendente', saleId: 0 }] },
   );
 
   const [displaySendOrderBtn, setDisplaySendOrderBtn] = useState(true);
@@ -67,22 +71,22 @@ export default function AdminOrdersDetails() {
       const detailsData = await axios({
         method: 'get',
         baseURL: `http://localhost:3001/sales/${thisOrderID}`,
-        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': token }
+        headers: { Accept: 'application/json', 'Content-Type': 'application/json', Authorization: token },
       })
         .catch((err) => {
-          console.error(err.response)
-          return err.response.status === 401 && history.push('/login')
+          console.error(err.response);
+          return err.response.status === 401 && history.push('/login');
         });
 
       return detailsData && setOrderDetails({ orderDetails: detailsData.data });
-    }
+    };
 
     getOrderDetails();
   }, [thisOrderID, token]);
 
   useEffect(() => {
-    if (status !== 'Pendente') setDisplaySendOrderBtn(false)
-  }, [status])
+    if (status !== 'Pendente') setDisplaySendOrderBtn(false);
+  }, [status]);
 
   return (
     <div className="admin-orders-details-flex-container">
@@ -91,6 +95,7 @@ export default function AdminOrdersDetails() {
         {renderProductData(saleId, status, orderDetails, totalPrice)}
         {displaySendOrderBtn && (
           <button
+            type="button"
             data-testid="mark-as-delivered-btn"
             className="mark-as-delivered-btn"
             onClick={() => setStatusAsDelivered(saleId, token, setOrderDetails)}
@@ -100,5 +105,5 @@ export default function AdminOrdersDetails() {
         )}
       </div>
     </div>
-  )
+  );
 }

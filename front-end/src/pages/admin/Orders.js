@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import OrderCard from '../../components/admin/OrderCard'
+import OrderCard from '../../components/admin/OrderCard';
 import AdminSideBar from '../../components/admin/AdminSideBar';
 import checkLogin from '../../services/checkLogin';
 import history from '../../services/history';
-import '../../styles/AdminOrders.css'
+import '../../styles/AdminOrders.css';
 
 export default function AdminOrders() {
   const [ordersData, setOrdersData] = useState([]);
@@ -16,15 +16,13 @@ export default function AdminOrders() {
       const ordersData = await axios({
         baseURL: 'http://localhost:3001/sales',
         method: 'get',
-        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': token }
+        headers: { Accept: 'application/json', 'Content-Type': 'application/json', Authorization: token },
       })
-        .catch(({ response: { status } }) => {
-          return status === 401 && history.push('/login')
-        });
+        .catch(({ response: { status } }) => status === 401 && history.push('/login'));
       return ordersData && setOrdersData(ordersData.data);
-    }
+    };
 
-    getOrders()
+    getOrders();
   }, [setOrdersData]);
 
   return (
@@ -41,5 +39,5 @@ export default function AdminOrders() {
         </div>
       </div>
     </div>
-  )
+  );
 }

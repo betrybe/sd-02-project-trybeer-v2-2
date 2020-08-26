@@ -1,5 +1,7 @@
 import React from 'react';
-import { render, fireEvent, cleanup, wait } from '@testing-library/react';
+import {
+  render, fireEvent, cleanup, wait,
+} from '@testing-library/react';
 import axios from 'axios';
 import { Router } from 'react-router-dom';
 import history from '../services/history';
@@ -23,10 +25,16 @@ const usersMockWithoutToken = {
 
 const ordersMock = {
   data: [
-    { "saleId": 5, "totalPrice": 49.35, "saleDate": 1596225708000, formattedPrice: 'R$&nbsp;49,35' },
-    { "saleId": 6, "totalPrice": 40.65, "saleDate": 1596225873000, formattedPrice: 'R$&nbsp;40,65' },
-    { "saleId": 7, "totalPrice": 59.15, "saleDate": 1596225935000, formattedPrice: 'R$&nbsp;59,15' }
-  ]
+    {
+      saleId: 5, totalPrice: 49.35, saleDate: 1596225708000, formattedPrice: 'R$&nbsp;49,35',
+    },
+    {
+      saleId: 6, totalPrice: 40.65, saleDate: 1596225873000, formattedPrice: 'R$&nbsp;40,65',
+    },
+    {
+      saleId: 7, totalPrice: 59.15, saleDate: 1596225935000, formattedPrice: 'R$&nbsp;59,15',
+    },
+  ],
 };
 
 const dataError = {
@@ -34,7 +42,7 @@ const dataError = {
     status: 404,
     data: {
       error: {
-        message: 'No sale was found.'
+        message: 'No sale was found.',
       },
     },
   },
@@ -44,7 +52,7 @@ jest.mock('axios');
 
 beforeEach(() => {
   cleanup();
-  localStorage.clear()
+  localStorage.clear();
 });
 
 describe('Testing Orders Page', () => {
@@ -54,7 +62,7 @@ describe('Testing Orders Page', () => {
     const { queryByTestId } = render(
       <Provider>
         <Orders />
-      </Provider>
+      </Provider>,
     );
     await wait();
     ordersMock.data.forEach((order, index) => {
@@ -65,7 +73,7 @@ describe('Testing Orders Page', () => {
       expect(queryByTestId(`${index}-order-date`).innerHTML).toBe(formattedDate);
       expect(queryByTestId(`${index}-order-total-value`)).toBeInTheDocument();
       expect(queryByTestId(`${index}-order-total-value`).innerHTML).toBe(order.formattedPrice);
-    })
+    });
   });
 
   test('if axios is rejected', async () => {
@@ -74,7 +82,7 @@ describe('Testing Orders Page', () => {
     const { getByText } = render(
       <Provider>
         <Orders />
-      </Provider>
+      </Provider>,
     );
     await wait();
   });
@@ -85,7 +93,7 @@ describe('Testing Orders Page', () => {
     const { queryByTestId } = render(
       <Provider>
         <Orders />
-      </Provider>
+      </Provider>,
     );
     await wait();
     expect(queryByTestId('1-order-number')).toBeInTheDocument();
@@ -99,9 +107,9 @@ describe('Testing Orders Page', () => {
     const { queryByTestId } = render(
       <Provider>
         <Orders />
-      </Provider>
+      </Provider>,
     );
     await wait();
     expect(history.location.pathname).toBe('/login');
   });
-})
+});

@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import history from '../../services/history';
 import axios from 'axios';
+import history from '../../services/history';
 import '../../styles/Profile.css';
 
-const verifyLocalStorage = () => {
-  return JSON.parse(localStorage.getItem('user'));
-};
+const verifyLocalStorage = () => JSON.parse(localStorage.getItem('user'));
 
 const emailAndNameInputs = (type, text, value, setValue, testId) => (
   <label htmlFor={text} className={`${text}-label`}>
@@ -39,17 +37,16 @@ const sendRequestNewName = async (newUser, setErrorStatus) => {
     method: 'patch',
     data: { name: newUser.name },
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
-      'Authorization': newUser.token
-    }
+      Authorization: newUser.token,
+    },
   })
-    .catch(({ response: { status, data: { error: { message } } } }) =>
-      setErrorStatus(`Error: ${status}. ${message}`));
+    .catch(({ response: { status, data: { error: { message } } } }) => setErrorStatus(`Error: ${status}. ${message}`));
   if (resp) {
     localStorage.setItem('user', JSON.stringify(newUser));
-    setErrorStatus(`Atualização concluída com sucesso`);
-  };
+    setErrorStatus('Atualização concluída com sucesso');
+  }
 };
 
 const Profile = () => {

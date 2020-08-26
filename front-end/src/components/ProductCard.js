@@ -1,12 +1,16 @@
 import React from 'react';
-import CartAddOrRemoveButtons from './CartAddOrRemoveButtons.js'
+import CartAddOrRemoveButtons from './CartAddOrRemoveButtons';
 import '../styles/ProductCard.css';
 
-export default function ProductCard ({ index, product: {  id, name, price, urlImage } }) {
+export default function ProductCard({
+  index, product: {
+    id, name, price, urlImage,
+  },
+}) {
   return (
     <div className="product-card-container">
       <div className="image-container">
-        <img className="product-image" src={urlImage} alt={`Foto do produto: ${name}`} data-testid={`${index}-product-img`}/>
+        <img className="product-image" src={urlImage} alt={`Foto do produto: ${name}`} data-testid={`${index}-product-img`} />
       </div>
       <div className="content-container">
         <div className="product-name-container">
@@ -18,9 +22,14 @@ export default function ProductCard ({ index, product: {  id, name, price, urlIm
           </span>
         </div>
         <div className="add-remove-btns-container">
-          <CartAddOrRemoveButtons product={ { id, name, price, urlImage } } index={index} />
+          <CartAddOrRemoveButtons
+            product={{
+              id, name, price, urlImage,
+            }}
+            index={index}
+          />
         </div>
       </div>
     </div>
-  )
+  );
 }

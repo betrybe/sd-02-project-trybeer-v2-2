@@ -10,7 +10,7 @@ const product = {
   name: 'Skol',
   price: 3.33,
   urlImage: 'localhost:3001/Skol',
-}
+};
 
 const productMock = [
   {
@@ -28,7 +28,7 @@ describe('testing CartAddOrRemoveButtons', () => {
     const { queryByTestId } = render(
       <Provider>
         <CartAddOrRemoveButtons product={product} index={index} />
-      </Provider>
+      </Provider>,
     );
     expect(queryByTestId(`${index}-product-minus`)).toBeInTheDocument();
     expect(queryByTestId(`${index}-product-minus`).tagName).toBe('BUTTON');
@@ -41,7 +41,7 @@ describe('testing CartAddOrRemoveButtons', () => {
     const { queryByTestId } = render(
       <Provider>
         <CartAddOrRemoveButtons product={product} index={index} />
-      </Provider>
+      </Provider>,
     );
     const addButton = queryByTestId(`${index}-product-plus`);
     const removeButton = queryByTestId(`${index}-product-minus`);
@@ -66,7 +66,7 @@ describe('testing CartAddOrRemoveButtons', () => {
     const { queryByTestId } = render(
       <Provider>
         <CartAddOrRemoveButtons product={product} index={index} />
-      </Provider>
+      </Provider>,
     );
     const addButton = queryByTestId(`${index}-product-plus`);
     const removeButton = queryByTestId(`${index}-product-minus`);

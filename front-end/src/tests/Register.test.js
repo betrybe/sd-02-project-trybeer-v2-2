@@ -1,9 +1,11 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { render, fireEvent, wait, cleanup } from '@testing-library/react';
+import {
+  render, fireEvent, wait, cleanup,
+} from '@testing-library/react';
+import axios from 'axios';
 import history from '../services/history';
 import Register from '../pages/RegisterPage';
-import axios from 'axios';
 
 const newUser = {
   name: 'Felipe Andrade',
@@ -65,14 +67,13 @@ afterEach(cleanup);
 
 beforeEach(() => {
   cleanup();
-  localStorage.clear()
+  localStorage.clear();
 });
 
 describe('Testing Register Page', () => {
-
   test('Testing if HTML elements appears', () => {
     const { queryByTestId } = render(
-      <Register />
+      <Register />,
     );
 
     const nameInput = queryByTestId('signup-name');
@@ -94,7 +95,7 @@ describe('Testing Register Page', () => {
 
   test('Testing funcionality of HTML elements', async () => {
     const { queryByTestId } = render(
-      <Register />
+      <Register />,
     );
 
     const nameInput = queryByTestId('signup-name');
@@ -121,10 +122,10 @@ describe('Testing Register Page', () => {
     fireEvent.change(passInput, { target: { value: '123456' } });
     expect(signInButton.disabled).toBeFalsy();
   });
-  
+
   test('Testing Login funcionality Button with client role', async () => {
     const { queryByTestId } = render(
-      <Register />
+      <Register />,
     );
     const nameInput = queryByTestId('signup-name');
     const emailInput = queryByTestId('signup-email');
@@ -148,7 +149,7 @@ describe('Testing Register Page', () => {
 
   test('Testing Login funcionality Button with administrator role', async () => {
     const { queryByTestId } = render(
-      <Register />
+      <Register />,
     );
     const nameInput = queryByTestId('signup-name');
     const emailInput = queryByTestId('signup-email');
@@ -169,9 +170,9 @@ describe('Testing Register Page', () => {
     expect(history.location.pathname).toBe('/admin/orders');
   });
 
-  test('Testing if register fail', async() => {
+  test('Testing if register fail', async () => {
     const { queryByTestId, queryByText } = render(
-      <Register />
+      <Register />,
     );
     const nameInput = queryByTestId('signup-name');
     const emailInput = queryByTestId('signup-email');
@@ -189,11 +190,11 @@ describe('Testing Register Page', () => {
 
   test('Testing if inputs is valids', async () => {
     const { queryByTestId } = render(
-      <Register />
-      );
+      <Register />,
+    );
 
     window.alert = jest.fn();
-    let signInButton = queryByTestId('signup-btn');
+    const signInButton = queryByTestId('signup-btn');
     signInButton.disabled = '';
     const nameInput = queryByTestId('signup-name');
     const emailInput = queryByTestId('signup-email');
@@ -227,7 +228,7 @@ describe('Testing Register Page', () => {
 
   test('Testing if Login fail', async () => {
     const { queryByTestId, queryByText } = render(
-      <Register />
+      <Register />,
     );
     const nameInput = queryByTestId('signup-name');
     const emailInput = queryByTestId('signup-email');
@@ -244,5 +245,4 @@ describe('Testing Register Page', () => {
     await wait();
     expect(queryByText(/E-mail not found or password wrong/i, { selector: 'h2' })).toBeInTheDocument();
   });
-
 });
