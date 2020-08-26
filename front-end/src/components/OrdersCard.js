@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import history from '../services/history';
 import '../styles/OrdersCard.css';
 import formatDateFunc from '../services/formatDateFunc';
@@ -36,3 +37,8 @@ const OrdersCard = ({ orders, index }) => {
 };
 
 export default OrdersCard;
+
+OrdersCard.propTypes = {
+  orders: PropTypes.instanceOf(Object).isRequired,
+  index: PropTypes.number.isRequired,
+};

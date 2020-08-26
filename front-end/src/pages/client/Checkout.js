@@ -183,7 +183,7 @@ export default function Checkout() {
       localStorage.removeItem('cart');
     }
     setCartData(getAddressInfoFromLocalStorage());
-    return null;
+    return (() => {});
   }, [setCartData]);
 
   return (

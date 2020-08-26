@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import CartAddOrRemoveButtons from './CartAddOrRemoveButtons';
 import '../styles/ProductCard.css';
 
@@ -33,3 +34,13 @@ export default function ProductCard({
     </div>
   );
 }
+
+ProductCard.propTypes = {
+  index: PropTypes.number.isRequired,
+  product: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    price: PropTypes.number.isRequired,
+    urlImage: PropTypes.string.isRequired,
+  }).isRequired,
+};
