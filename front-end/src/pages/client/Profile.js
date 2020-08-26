@@ -20,17 +20,6 @@ const emailAndNameInputs = (type, text, value, setValue, testId) => (
   </label>
 );
 
-const saveBtn = (disabled, user, setError) => (
-  <button
-    type="button"
-    data-testid="profile-save-btn"
-    disabled={disabled}
-    onClick={() => sendRequestNewName(user, setError)}
-  >
-    Salvar
-  </button>
-);
-
 const sendRequestNewName = async (newUser, setErrorStatus) => {
   const resp = await axios({
     baseURL: 'http://localhost:3001/users/me',
@@ -48,6 +37,17 @@ const sendRequestNewName = async (newUser, setErrorStatus) => {
     setErrorStatus('Atualização concluída com sucesso');
   }
 };
+
+const saveBtn = (disabled, user, setError) => (
+  <button
+    type="button"
+    data-testid="profile-save-btn"
+    disabled={disabled}
+    onClick={() => sendRequestNewName(user, setError)}
+  >
+    Salvar
+  </button>
+);
 
 const Profile = () => {
   const [user, setUser] = useState('');
