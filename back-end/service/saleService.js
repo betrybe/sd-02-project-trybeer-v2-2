@@ -17,12 +17,16 @@ const createSale = async (sale, userId, name) => {
 
   const saleDate = new Date().toISOString().replace('T', ' ').substring(0, 19);
 
-  const mountedSale = { userId, totalPrice, deliveryAddress, deliveryNumber, saleDate };
+  const mountedSale = {
+    userId, totalPrice, deliveryAddress, deliveryNumber, saleDate,
+  };
   const newSale = await saleModel.createSale(mountedSale);
-  await quantities.forEach(async ({ productId, quantity }) =>
-    saleModel.createSaleProducts(newSale.id, productId, quantity));
+  await quantities.forEach(async ({ productId, quantity }) => saleModel
+    .createSaleProducts(newSale.id, productId, quantity));
 
-  return { user: name, saleId: newSale.id, date: saleDate, total: totalPrice };
+  return {
+    user: name, saleId: newSale.id, date: saleDate, total: totalPrice,
+  };
 };
 
 const getSale = async (id, role) => {

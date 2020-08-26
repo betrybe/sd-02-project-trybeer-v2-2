@@ -29,8 +29,8 @@ const createSale = Joi.object({
   deliveryNumber: Joi.string().max(50).required(),
 });
 
-const validateJoi = async (schema, reqInfo) =>
-  schema.validateAsync(reqInfo).catch((fail) => errorJoi(fail));
+const validateJoi = async (schema, reqInfo) => schema.validateAsync(reqInfo)
+  .catch((fail) => errorJoi(fail));
 
 module.exports = {
   loginUser,

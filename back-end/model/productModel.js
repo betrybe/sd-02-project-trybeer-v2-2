@@ -9,8 +9,9 @@ const getAllProducts = async () => {
     .execute()
     .then((results) => results.fetchAll())
     .then((products) => products.map(
-      ([id, name, price, urlImage]) =>
-        ({ id, name, price, urlImage }),
+      ([id, name, price, urlImage]) => ({
+        id, name, price, urlImage,
+      }),
     ));
   return result;
 };
@@ -29,7 +30,9 @@ const getProductById = async (param) => {
   if (!result.length) return null;
   const [id, name, price, urlImage] = result;
 
-  return { id, name, price, urlImage };
+  return {
+    id, name, price, urlImage,
+  };
 };
 
 const getProductsByIds = async (arrayIds) => {

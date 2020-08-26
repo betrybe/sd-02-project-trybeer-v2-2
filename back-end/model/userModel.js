@@ -14,11 +14,15 @@ const getUserBy = async (paramKey, paramValue) => {
   if (!result.length) return null;
   const [id, name, email, password, role] = result;
 
-  return { id, name, email, password, role };
+  return {
+    id, name, email, password, role,
+  };
 };
 
 const createUser = async (modelInfo) => {
-  const { name, email, password, stringRole } = modelInfo;
+  const {
+    name, email, password, stringRole,
+  } = modelInfo;
   const session = await connection();
   const id = await session.sql(
     `INSERT INTO users (name, email, password, role)
@@ -30,7 +34,9 @@ const createUser = async (modelInfo) => {
     .bind(stringRole)
     .execute()
     .then((result) => result.getAutoIncrementValue());
-  return { id, name, email, role: stringRole };
+  return {
+    id, name, email, role: stringRole,
+  };
 };
 
 const getUserById = async (userId) => getUserBy('id', userId);

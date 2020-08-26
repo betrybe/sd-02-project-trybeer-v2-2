@@ -23,13 +23,17 @@ const loginUser = async (email, paramPassword) => {
 };
 
 const createUser = async (userInfo) => {
-  const { name, email, password, role } = userInfo;
+  const {
+    name, email, password, role,
+  } = userInfo;
   const result = await userModel.getUserByEmail(email);
   if (result) {
     return { error: true, message: 'E-mail already in database.', code: 'already_exists' };
   }
   const stringRole = role === 'true' ? 'administrator' : 'client';
-  const modelInfo = { name, email, password, stringRole };
+  const modelInfo = {
+    name, email, password, stringRole,
+  };
   const createdUser = await userModel.createUser(modelInfo);
   return createdUser;
 };

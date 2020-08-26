@@ -10,7 +10,7 @@ const createSale = rescue(async (req, res, next) => {
   const { id: userId, name } = req.user;
   const serviceAnswer = await saleService.createSale(sale, userId, name);
   if (serviceAnswer.error) return next(serviceAnswer);
-  res.status(201).json(serviceAnswer);
+  return res.status(201).json(serviceAnswer);
 });
 
 const getSale = rescue(async (req, res, next) => {
