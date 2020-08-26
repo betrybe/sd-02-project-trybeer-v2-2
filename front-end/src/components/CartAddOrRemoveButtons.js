@@ -50,10 +50,11 @@ export default function CartAddOrRemoveButtons({
       if (!currentCart) return localStorage.setItem('cart', JSON.stringify([createCartItem()]));
 
       const newProducts = currentCart;
-      const productIds = currentCart.map(({ id }) => id);
+      const productIds = currentCart.map(({ id: idCart }) => idCart);
       if (productIds.some((productId) => productId === id)) return updateItemQty(currentCart);
       newProducts.push(createCartItem());
       sendToLocalStorage(newProducts);
+      return null;
     };
 
     const refreshCart = () => {
