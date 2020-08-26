@@ -22,15 +22,6 @@ export default function AdminProfile() {
           {`Email: ${email}`}
         </div>
       </div>
-      <div>
-        <p data-testid="side-menu-item-orders" onClick={() => history.push('/admin/orders')}>Pedidos</p>
-      </div>
-      <div>
-        <p data-testid="side-menu-item-profile" onClick={() => history.push('/admin/profile')}>Perfil</p>
-      </div>
-      <div>
-        <p data-testid="side-menu-item-logout" onClick={() => history.push('/login')}>Sair</p>
-      </div>
     </div>
   );
 }

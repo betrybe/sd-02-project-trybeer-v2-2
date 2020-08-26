@@ -20,30 +20,6 @@ const interactiveFormField = (formName, label, type, formValidation) => (
   </label>
 );
 
-const sendProducts = async (deliveryAddress, deliveryNumber, setSalesStatus) => {
-  const productsData = JSON.parse(localStorage.getItem('cart')).map(({ id: productId, itemQty: quantity }) => ({ productId, quantity }));
-
-  const salesObject = { products: productsData, deliveryAddress, deliveryNumber };
-
-  const { token } = JSON.parse(localStorage.getItem('user'));
-
-  let error;
-
-  const salesRequest = await axios({
-    baseURL: 'http://localhost:3001/sales',
-    method: 'post',
-    headers: { Accept: 'application/json', 'Content-Type': 'application/json', Authorization: token },
-    data: salesObject,
-  })
-    .catch(({ response: { status, data: { error: { message } } } }) => {
-      error = 1;
-      return statusHandler({ status, message }, setSalesStatus);
-    });
-
-  if (error !== 1) return statusHandler(salesRequest, setSalesStatus);
-  return null;
-};
-
 const statusHandler = ({ status, message }, setSalesStatus) => {
   const divStyleError = {
     fontSize: 'smaller',
@@ -91,6 +67,30 @@ const statusHandler = ({ status, message }, setSalesStatus) => {
       <span>{`Erro código: ${status}, ${message}`}</span>
     </div>,
   );
+};
+
+const sendProducts = async (deliveryAddress, deliveryNumber, setSalesStatus) => {
+  const productsData = JSON.parse(localStorage.getItem('cart')).map(({ id: productId, itemQty: quantity }) => ({ productId, quantity }));
+
+  const salesObject = { products: productsData, deliveryAddress, deliveryNumber };
+
+  const { token } = JSON.parse(localStorage.getItem('user'));
+
+  let error;
+
+  const salesRequest = await axios({
+    baseURL: 'http://localhost:3001/sales',
+    method: 'post',
+    headers: { Accept: 'application/json', 'Content-Type': 'application/json', Authorization: token },
+    data: salesObject,
+  })
+    .catch(({ response: { status, data: { error: { message } } } }) => {
+      error = 1;
+      return statusHandler({ status, message }, setSalesStatus);
+    });
+
+  if (error !== 1) return statusHandler(salesRequest, setSalesStatus);
+  return null;
 };
 
 const removeItem = (itemId, setCartData) => {
@@ -183,6 +183,7 @@ export default function Checkout() {
       localStorage.removeItem('cart');
     }
     setCartData(getAddressInfoFromLocalStorage());
+    return null;
   }, [setCartData]);
 
   return (

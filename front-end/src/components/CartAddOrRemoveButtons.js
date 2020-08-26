@@ -70,7 +70,7 @@ export default function CartAddOrRemoveButtons({
     const fetchTotalItemQty = () => {
       const currentCart = JSON.parse(localStorage.getItem('cart'));
       const totalQty = currentCart ? currentCart.reduce(
-        (total, { itemQty }) => total + itemQty, 0,
+        (total, { itemQty: itemQtyCard }) => total + itemQtyCard, 0,
       ) : 0;
       setTotalQty(totalQty);
     };
