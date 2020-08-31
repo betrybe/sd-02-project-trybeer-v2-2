@@ -41,13 +41,13 @@ export default function OrderCard({
   );
 }
 
-OrderCard.propTypes = {
-  orders: PropTypes.shapeof({
-    totalPrice: PropTypes.number.isRequired,
-    status: PropTypes.string.isRequired,
-    saleId: PropTypes.number.isRequired,
-    deliveryNumber: PropTypes.number.isRequired,
-    deliveryAddress: PropTypes.string.isRequired,
-  }).isRequired,
-  index: PropTypes.number.isRequired,
-};
+// OrderCard.propTypes = {
+//   orders: PropTypes.shapeof({
+//     totalPrice: PropTypes.number.isRequired,
+//     status: PropTypes.string.isRequired,
+//     saleId: PropTypes.number.isRequired,
+//     deliveryNumber: PropTypes.number.isRequired,
+//     deliveryAddress: PropTypes.string.isRequired,
+//   }).isRequired,
+//   index: PropTypes.number.isRequired,
+// };
