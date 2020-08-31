@@ -46,11 +46,14 @@ const createUser = async (userInfo) => {
 };
 
 const updateUserById = async (id, name) => {
-  const userExists = await userModel.getUserById(id);
+  const userExists = await users.findByPk(id);
   if (!userExists) {
     return { error: true, message: 'User not found.', code: 'unauthorized' };
   }
-  const result = await userModel.updateUserById(id, name);
+  await users.update({ name }, { where: { id } });
+  const result = await users.findOne(
+    { where: { id }, attributes: { exclude: ['password', 'published', 'updated'] } },
+  );
   return result;
 };
 
