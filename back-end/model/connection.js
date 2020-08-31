@@ -5,7 +5,7 @@ const connection = () => mysqlx.getSession({
   password: process.env.SQL_PASSWORD,
   host: process.env.SQL_HOST,
   port: process.env.SQL_PORT,
-  schema: process.env.SQL_SCHEMA,
+  schema: 'project_trybeer',
 });
 
 module.exports = connection;

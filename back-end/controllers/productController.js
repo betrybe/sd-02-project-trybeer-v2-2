@@ -1,5 +1,5 @@
 const rescue = require('express-rescue');
-const productService = require('../service/productService');
+const productService = require('../services/productService');
 
 const getAllProducts = rescue(async (req, res, next) => {
   const serviceAnswer = await productService.getAllProducts();

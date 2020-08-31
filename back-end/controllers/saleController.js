@@ -1,5 +1,5 @@
 const rescue = require('express-rescue');
-const saleService = require('../service/saleService');
+const saleService = require('../services/saleService');
 const schemasJoi = require('./schemasJoi');
 const { validateJoi } = require('./schemasJoi');
 
