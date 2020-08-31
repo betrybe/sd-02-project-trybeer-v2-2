@@ -1,9 +1,17 @@
-const productModel = require('../model/productModel');
+const { products } = require('../models');
 
-const getAllProducts = async () => productModel.getAllProducts();
+const getAllProducts = async () => {
+  const prod = await products.findAll({
+    attributes: { exclude: ['published', 'updated'] },
+  });
+  console.log(prod);
+  return prod;
+};
 
 const getProductById = async (id) => {
-  const productAnswer = await productModel.getProductById(id);
+  const productAnswer = await products.findOne(
+    { where: { id }, attributes: { exclude: ['published', 'updated'] } },
+  );
   if (!productAnswer) {
     return { error: true, message: 'Product not found', code: 'not_found' };
   }
