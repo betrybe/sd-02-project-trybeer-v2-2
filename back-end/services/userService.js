@@ -37,7 +37,6 @@ const createUser = async (userInfo) => {
     return { error: true, message: 'E-mail already in database.', code: 'already_exists' };
   }
   const stringRole = role === 'true' ? 'administrator' : 'client';
-  console.log(stringRole);
   const createdUser = await users.create({
     name, email, password, role: stringRole,
   });

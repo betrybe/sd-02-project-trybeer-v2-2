@@ -4,6 +4,9 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const cors = require('cors');
 
+const http = require('http').createServer(express());
+const io = require('socket.io')(http);
+
 const errorController = require('./controllers/errorController');
 const userController = require('./controllers/userController');
 const productController = require('./controllers/productController');
@@ -20,8 +23,10 @@ app.use(bodyParser.json());
 
 app.post('/users', userController.createUser);
 
-app.post('/login', userController.loginUser);
 app.get('/login', middlewares.loginJwt, userController.getLoginUser);
+
+app.post('/login', userController.loginUser);
+app.post('/users', userController.createUser);
 
 app.patch('/users/me', middlewares.loginJwt, userController.updateUserById);
 
