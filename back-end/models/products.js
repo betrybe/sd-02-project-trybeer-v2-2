@@ -8,6 +8,12 @@ const createProductsModel = (sequelize, DataTypes) => {
     updatedAt: 'updated',
   });
 
+  products.associate = (models) => {
+    products.belongsToMany(models.sales, {
+      through: 'sales-products', foreignKey: 'sale_id', otherKey: 'product_id',
+    });
+  };
+
   return products;
 };
 

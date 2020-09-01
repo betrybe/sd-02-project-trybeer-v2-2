@@ -31,7 +31,8 @@ const getSaleProducts = rescue(async (req, res, next) => {
 const updateSaleById = rescue(async (req, res, next) => {
   const { id: saleId } = req.params;
   const { role } = req.user;
-  const serviceAnswer = await saleService.updateSaleById(saleId, role);
+  const { status } = req.body;
+  const serviceAnswer = await saleService.updateSaleById(saleId, role, status);
   if (serviceAnswer.error) return next(serviceAnswer);
   return res.status(200).json(serviceAnswer);
 });
