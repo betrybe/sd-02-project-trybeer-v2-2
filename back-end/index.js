@@ -6,11 +6,12 @@ const cors = require('cors');
 
 const http = require('http').createServer(express());
 const io = require('socket.io')(http);
-const errorController = require('./controller/errorController');
-const userController = require('./controller/userController');
-const productController = require('./controller/productController');
-const saleController = require('./controller/saleController');
-const middlewares = require('./middleware/validateJwt');
+
+const errorController = require('./controllers/errorController');
+const userController = require('./controllers/userController');
+const productController = require('./controllers/productController');
+const saleController = require('./controllers/saleController');
+const middlewares = require('./middlewares/validateJwt');
 
 const app = express();
 app.use(cors());
@@ -19,6 +20,8 @@ app.use('/images', express.static(path.join(__dirname, 'public/images')));
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+app.post('/users', userController.createUser);
 
 app.get('/login', middlewares.loginJwt, userController.getLoginUser);
 
