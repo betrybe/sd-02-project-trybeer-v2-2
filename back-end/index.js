@@ -5,6 +5,7 @@ const path = require('path');
 const cors = require('cors');
 
 const http = require('http').createServer(express());
+const io = require('socket.io')(http);
 const errorController = require('./controller/errorController');
 const userController = require('./controller/userController');
 const productController = require('./controller/productController');
@@ -42,5 +43,11 @@ const NODE_PORT = process.env.NODE_PORT || 3001;
 const CHAT_PORT = process.env.CHAT_PORT || 5000;
 
 app.listen(NODE_PORT, () => console.log(`Listening on ${NODE_PORT}`));
+
+io.on('connection', (socket) => {
+  socket.on('message', (msg) => {
+    io.emit('message', `${msg} lalala`);
+  });
+});
 
 http.listen(CHAT_PORT, () => console.log(`Chat Listening on ${CHAT_PORT}`));
