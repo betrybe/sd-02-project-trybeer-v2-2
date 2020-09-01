@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useContext } from 'react';
+import PropTypes from 'prop-types';
 import { ReactComponent as Add } from '../images/Add.svg';
 import { ReactComponent as Remove } from '../images/Minus.svg';
 import { TrybeerContext } from '../context/TrybeerContext';
-import { propCard } from './ProductCard';
 import '../styles/CartAddOrRemoveButtons.css';
 
 export default function CartAddOrRemoveButtons({
@@ -51,7 +51,7 @@ export default function CartAddOrRemoveButtons({
       if (!currentCart) return localStorage.setItem('cart', JSON.stringify([createCartItem()]));
 
       const newProducts = currentCart;
-      const productIds = currentCart.map(({ id }) => id);
+      const productIds = currentCart.map(({ id: currentId }) => currentId);
       if (productIds.some((productId) => productId === id)) return updateItemQty(currentCart);
       newProducts.push(createCartItem());
       return sendToLocalStorage(newProducts);
@@ -71,7 +71,7 @@ export default function CartAddOrRemoveButtons({
     const fetchTotalItemQty = () => {
       const currentCart = JSON.parse(localStorage.getItem('cart'));
       const totalQty = currentCart ? currentCart.reduce(
-        (total, { itemQty }) => total + itemQty, 0,
+        (total, { itemQty: newQty }) => total + newQty, 0,
       ) : 0;
       setTotalQty(totalQty);
     };
@@ -111,6 +111,15 @@ export default function CartAddOrRemoveButtons({
       </div>
     </div>
   );
+}
+export const propCard = {
+  index: PropTypes.number.isRequired,
+  product: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    price: PropTypes.number.isRequired,
+    urlImage: PropTypes.string.isRequired,
+  }).isRequired,
 }
 
 CartAddOrRemoveButtons.propTypes = propCard;
