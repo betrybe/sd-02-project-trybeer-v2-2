@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 import history from '../../services/history';
 import OrderCardDetails from '../../components/OrderCardDetails';
@@ -41,3 +42,10 @@ const OrderDetails = ({ match: { params: { orderId } } }) => {
 };
 
 export default OrderDetails;
+
+OrderDetails.propTypes = {
+  match: PropTypes.shape({
+    params: PropTypes.instanceOf(Object).isRequired,
+    orderId: PropTypes.number.isRequired,
+  }).isRequired,
+};

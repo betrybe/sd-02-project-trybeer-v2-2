@@ -13,6 +13,7 @@ import RegisterPage from './pages/RegisterPage';
 import OrdersPage from './pages/client/Orders';
 import OrdersDetails from './pages/client/OrderDetails';
 import Profile from './pages/client/Profile';
+import Chat from './pages/Chat';
 import './App.css';
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
           <Route exact path="/orders/:orderId" component={OrdersDetails} />
           <Route exact path="/profile" component={Profile} />
           <Route exact path="/checkout" component={Checkout} />
+          <Route exact path="/chat" component={Chat} />
           <Route exact path="/" render={() => history.push('/login')} />
         </Switch>
       </Router>

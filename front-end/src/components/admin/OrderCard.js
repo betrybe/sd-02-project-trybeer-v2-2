@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import '../../styles/AdminOrderCard.css';
+import PropTypes from 'prop-types';
 import formatPriceFunc from '../../services/formatPriceFunc';
 
 export const getStatusColor = (status) => {
@@ -39,3 +40,14 @@ export default function OrderCard({
     </Link>
   );
 }
+
+OrderCard.propTypes = {
+  orders: PropTypes.shape({
+    totalPrice: PropTypes.number.isRequired,
+    status: PropTypes.string.isRequired,
+    saleId: PropTypes.number.isRequired,
+    deliveryNumber: PropTypes.number.isRequired,
+    deliveryAddress: PropTypes.string.isRequired,
+  }).isRequired,
+  index: PropTypes.number.isRequired,
+};

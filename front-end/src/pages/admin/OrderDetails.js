@@ -7,6 +7,16 @@ import formatPriceFunc from '../../services/formatPriceFunc';
 import '../../styles/AdminOrderDetails.css';
 import AdminSideBar from '../../components/admin/AdminSideBar';
 
+const reqAdminOrder = (thisOrderID, token) => ({
+  method: 'get',
+  baseURL: `http://localhost:3001/sales/${thisOrderID}`,
+  headers: {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    Authorization: token
+  },
+});
+
 const setStatusAsDelivered = async (saleId, token, setOrderDetails) => axios({
   method: 'patch',
   baseURL: `http://localhost:3001/sales/${saleId}`,
@@ -36,7 +46,9 @@ const renderProductData = (saleId, status, orderDetails, totalPrice) => (
               <span data-testid={`${index}-product-name`}>{`${name}`}</span>
             </div>
             <div className="product-price-info">
-              <span data-testid={`${index}-product-total-value`}>{`${formatPriceFunc(price * quantity)}`}</span>
+              <span data-testid={`${index}-product-total-value`}>
+                {`${formatPriceFunc(price * quantity)}`}
+              </span>
               <span className="product-unitary-price">{`  (${formatPriceFunc(price)})`}</span>
             </div>
           </li>
@@ -68,11 +80,7 @@ export default function AdminOrdersDetails() {
 
   useEffect(() => {
     const getOrderDetails = async () => {
-      const detailsData = await axios({
-        method: 'get',
-        baseURL: `http://localhost:3001/sales/${thisOrderID}`,
-        headers: { Accept: 'application/json', 'Content-Type': 'application/json', Authorization: token },
-      })
+      const detailsData = await axios(reqAdminOrder(thisOrderID, token))
         .catch((err) => {
           console.error(err.response);
           return err.response.status === 401 && history.push('/login');

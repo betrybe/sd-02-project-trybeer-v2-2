@@ -1,5 +1,5 @@
 import React from 'react';
-import CartAddOrRemoveButtons from './CartAddOrRemoveButtons';
+import CartAddOrRemoveButtons, { propCard } from './CartAddOrRemoveButtons';
 import '../styles/ProductCard.css';
 
 export default function ProductCard({
@@ -33,3 +33,5 @@ export default function ProductCard({
     </div>
   );
 }
+
+ProductCard.propTypes = propCard;

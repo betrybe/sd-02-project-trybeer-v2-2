@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import formatDateFunc from '../services/formatDateFunc';
 import formatPriceFunc from '../services/formatPriceFunc';
 import '../styles/OrderCardDetails.css';
@@ -34,3 +35,8 @@ const OrderCardDetails = ({ data, id }) => {
 };
 
 export default OrderCardDetails;
+
+OrderCardDetails.propTypes = {
+  data: PropTypes.arrayOf(Object).isRequired,
+  id: PropTypes.number.isRequired,
+};

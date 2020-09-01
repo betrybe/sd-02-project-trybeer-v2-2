@@ -1,0 +1,56 @@
+.firstContainer {
+  align-content: space-around;
+  display: flex;
+  flex-direction: row;
+  height: 70vh;
+  justify-content: center;
+}
+
+
+.messagesBox {
+  background-color: yellow;
+  display: flex;
+  height: 66vh;
+  justify-content: flex-start;
+  margin: 0 1vh 1vh 0;
+  overflow: auto;
+  width: 50vw;
+}
+
+form {
+  align-items: center;
+  display: flex;
+  justify-content: space-around;
+  width: 50vw;
+}
+
+.inputMessageContainer {
+  background-color: red;
+  display: flex;
+  flex-direction: row;
+  height: 4vh;
+  width: 50vw;
+}
+
+.containerInput {
+  width: fit-content;
+}
+
+.buttonContainer {
+  width: fit-content;
+}
+
+.messageInput {
+  height: 3vh;
+  width: 30vw;
+}
+
+.usersContainers {
+  background-color: blue;
+  height: 71vh;
+  width: 20vw;
+}
+
+li {
+  list-style-type: none;
+}

@@ -38,5 +38,14 @@ app.use(errorController.promiseErrors);
 app.all('*', errorController.endpointNotFound);
 
 const NODE_PORT = process.env.NODE_PORT || 3001;
+const CHAT_PORT = process.env.CHAT_PORT || 5000;
 
 app.listen(NODE_PORT, () => console.log(`Listening on ${NODE_PORT}`));
+
+io.on('connection', (socket) => {
+  socket.on('message', (msg) => {
+    io.emit('message', `${msg}`);
+  });
+});
+
+http.listen(CHAT_PORT, () => console.log(`Chat Listening on ${CHAT_PORT}`));

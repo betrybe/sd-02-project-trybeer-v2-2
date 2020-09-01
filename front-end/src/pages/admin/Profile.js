@@ -23,13 +23,13 @@ export default function AdminProfile() {
         </div>
       </div>
       <div>
-        <p data-testid="side-menu-item-orders" onClick={() => history.push('/admin/orders')}>Pedidos</p>
+        <button type="button" data-testid="side-menu-item-orders" onClick={() => history.push('/admin/orders')}>Pedidos</button>
       </div>
       <div>
-        <p data-testid="side-menu-item-profile" onClick={() => history.push('/admin/profile')}>Perfil</p>
+        <button type="button" data-testid="side-menu-item-profile" onClick={() => history.push('/admin/profile')}>Perfil</button>
       </div>
       <div>
-        <p data-testid="side-menu-item-logout" onClick={() => history.push('/login')}>Sair</p>
+        <button type="button" data-testid="side-menu-item-logout" onClick={() => history.push('/login')}>Sair</button>
       </div>
     </div>
   );

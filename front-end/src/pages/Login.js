@@ -6,6 +6,18 @@ import '../styles/Login.css';
 
 const MAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
+const loginRedirect = ({
+  data: {
+    name, email, token, role,
+  },
+}) => {
+  localStorage.setItem('user', JSON.stringify({
+    name, email, token, role,
+  }));
+  if (role === 'administrator') return history.push('/admin/orders');
+  return history.push('/products');
+};
+
 const sendLoginRequest = async (email, password, setErrorMessage) => {
   const loginData = await axios({
     baseURL: 'http://localhost:3001/login',
@@ -23,18 +35,6 @@ const sendLoginRequest = async (email, password, setErrorMessage) => {
   return loginData.data.error
     ? setErrorMessage(`Error: ${loginData.status}. ${loginData.data.error.message}`)
     : loginRedirect(loginData);
-};
-
-const loginRedirect = ({
-  data: {
-    name, email, token, role,
-  },
-}) => {
-  localStorage.setItem('user', JSON.stringify({
-    name, email, token, role,
-  }));
-  if (role === 'administrator') return history.push('/admin/orders');
-  return history.push('/products');
 };
 
 const renderPage = (interactiveFormField, formValidation, [
