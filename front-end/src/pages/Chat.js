@@ -7,15 +7,13 @@ const socket = socketIOClient(ENDPOINT);
 
 const submitForm = (e, value, clearInput) => {
   e.preventDefault();
-  socket.emit('message', value)
+  socket.emit('message', value);
   clearInput('');
-}
+};
 
-const ListItem = ({ keyIndex, value}) => {
-  return (
+const ListItem = ({ keyIndex, value }) => (
   <li key={`${value}${keyIndex}`}>{value}</li>
-  );
-}
+);
 
 const Chat = () => {
   const [inputValue, setInputValue] = useState('');

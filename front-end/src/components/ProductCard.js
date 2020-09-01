@@ -43,6 +43,6 @@ export const propCard = {
     price: PropTypes.number.isRequired,
     urlImage: PropTypes.string.isRequired,
   }).isRequired,
-}
+};
 
 ProductCard.propTypes = propCard;
