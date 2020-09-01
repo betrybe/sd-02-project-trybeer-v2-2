@@ -53,7 +53,7 @@ const Chat = () => {
 
 export default Chat;
 
-Chat.propTypes = {
+ListItem.propTypes = {
   keyIndex: PropTypes.number.isRequired,
   value: PropTypes.string.isRequired,
 };
