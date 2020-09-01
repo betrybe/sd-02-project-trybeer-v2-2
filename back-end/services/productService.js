@@ -4,7 +4,6 @@ const getAllProducts = async () => {
   const prod = await products.findAll({
     attributes: { exclude: ['published', 'updated'] },
   });
-  console.log(prod);
   return prod;
 };
 
