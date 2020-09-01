@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { ReactComponent as Add } from '../images/Add.svg';
 import { ReactComponent as Remove } from '../images/Minus.svg';
 import { TrybeerContext } from '../context/TrybeerContext';
-import '../styles/CartAddOrRemoveButtons.css'
+import '../styles/CartAddOrRemoveButtons.css';
 
 export default function CartAddOrRemoveButtons({
   index, product: {
