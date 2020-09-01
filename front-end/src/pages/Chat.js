@@ -40,7 +40,7 @@ const Chat = () => {
       <div className="inputMessageContainer">
         <form action="">
           <div className="containerInput">
-            <input id="messageInput" value={inputValue} onChange={(e) => setInputValue(e.target.value)} />
+            <input className="messageInput" value={inputValue} onChange={(e) => setInputValue(e.target.value)} />
           </div>
           <div className="buttonContainer">
             <button onClick={(e) => submitForm(e, inputValue, setInputValue)}>Send</button>

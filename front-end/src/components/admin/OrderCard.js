@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import '../../styles/AdminOrderCard.css';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import formatPriceFunc from '../../services/formatPriceFunc';
 
 export const getStatusColor = (status) => {
