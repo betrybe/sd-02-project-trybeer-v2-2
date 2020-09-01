@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useContext } from 'react';
-import PropTypes from 'prop-types';
 import { ReactComponent as Add } from '../images/Add.svg';
 import { ReactComponent as Remove } from '../images/Minus.svg';
 import { TrybeerContext } from '../context/TrybeerContext';
@@ -55,7 +54,7 @@ export default function CartAddOrRemoveButtons({
       const productIds = currentCart.map(({ id }) => id);
       if (productIds.some((productId) => productId === id)) return updateItemQty(currentCart);
       newProducts.push(createCartItem());
-      sendToLocalStorage(newProducts);
+      return sendToLocalStorage(newProducts);
     };
 
     const refreshCart = () => {
