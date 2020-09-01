@@ -1,5 +1,4 @@
 const { Op } = require('sequelize');
-const saleModel = require('../model/saleModel');
 const { products, sales, sales_products: salesProducts } = require('../models');
 
 const createSale = async (sale, userId, name) => {
