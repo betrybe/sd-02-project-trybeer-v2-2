@@ -1,6 +1,5 @@
 import React from 'react';
-import CartAddOrRemoveButtons from './CartAddOrRemoveButtons';
-import { propCard } from './CartAddOrRemoveButtons';
+import CartAddOrRemoveButtons, { propCard } from './CartAddOrRemoveButtons';
 import '../styles/ProductCard.css';
 
 export default function ProductCard({

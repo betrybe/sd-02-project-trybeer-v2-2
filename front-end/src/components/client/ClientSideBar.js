@@ -33,7 +33,7 @@ const SideBar = () => {
         <button
           type="button"
           data-testid="side-menu-item-my-profile"
-          onClick={() =>redirectButton(setShowSideMenu, '/profile')}
+          onClick={() => redirectButton(setShowSideMenu, '/profile')}
         >
           Meu Perfil
         </button>

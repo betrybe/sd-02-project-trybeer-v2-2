@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import socketIOClient from 'socket.io-client';
+import PropTypes from 'prop-types';
 import './Chat.css';
 
 const ENDPOINT = 'http://localhost:5000';
@@ -51,3 +52,8 @@ const Chat = () => {
 };
 
 export default Chat;
+
+Chat.propTypes = {
+  keyIndex: PropTypes.number.isRequired,
+  value: PropTypes.string.isRequired,
+};
