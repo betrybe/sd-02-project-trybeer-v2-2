@@ -9,12 +9,11 @@ const submitForm = (e, value, clearInput) => {
   e.preventDefault();
   socket.emit('message', value)
   clearInput('');
-  // setMsg((state) => [...state, value]);
 }
 
-const ListItem = ({ key, value}) => {
+const ListItem = ({ keyIndex, value}) => {
   return (
-  <li key={key}>{value}</li>
+  <li key={`${value}${keyIndex}`}>{value}</li>
   );
 }
 
@@ -34,7 +33,7 @@ const Chat = () => {
       <div className="messagesBox">
         <ul id="message">
           {
-            messages.map((message, index) => <ListItem key={index} value={message}/>)
+            messages.map((message, index) => <ListItem key={`${message}${index}`} keyIndex={index} value={message}/>)
           }
         </ul>
       </div>

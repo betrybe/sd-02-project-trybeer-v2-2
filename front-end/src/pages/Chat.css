@@ -1,11 +1,3 @@
-body {
-  align-items: center;
-  background-color: gray;
-  display: flex;
-  justify-content: center;
-  height: 95vh;
-}
-
 .firstContainer {
   align-content: space-around;
   display: flex;
@@ -46,12 +38,6 @@ form {
 
 .buttonContainer {
   width: fit-content;
-}
-
-button {
-  background-color: blue;
-  height: 3.5vh;
-  width: 5vw;
 }
 
 #messageInput {

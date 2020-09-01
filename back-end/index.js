@@ -46,7 +46,7 @@ app.listen(NODE_PORT, () => console.log(`Listening on ${NODE_PORT}`));
 
 io.on('connection', (socket) => {
   socket.on('message', (msg) => {
-    io.emit('message', `${msg} lalala`);
+    io.emit('message', `${msg}`);
   });
 });
 
