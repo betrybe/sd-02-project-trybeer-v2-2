@@ -35,7 +35,7 @@ export default function ProductCard({
   );
 }
 
-ProductCard.propTypes = {
+export const propCard = {
   index: PropTypes.number.isRequired,
   product: PropTypes.shape({
     id: PropTypes.number.isRequired,
@@ -43,4 +43,6 @@ ProductCard.propTypes = {
     price: PropTypes.number.isRequired,
     urlImage: PropTypes.string.isRequired,
   }).isRequired,
-};
+}
+
+ProductCard.propTypes = propCard;

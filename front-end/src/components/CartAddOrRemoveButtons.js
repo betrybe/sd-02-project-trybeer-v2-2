@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { ReactComponent as Add } from '../images/Add.svg';
 import { ReactComponent as Remove } from '../images/Minus.svg';
 import { TrybeerContext } from '../context/TrybeerContext';
+import { propCard } from './ProductCard';
 import '../styles/CartAddOrRemoveButtons.css';
 
 export default function CartAddOrRemoveButtons({
@@ -113,12 +114,4 @@ export default function CartAddOrRemoveButtons({
   );
 }
 
-CartAddOrRemoveButtons.propTypes = {
-  index: PropTypes.number.isRequired,
-  product: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    name: PropTypes.string.isRequired,
-    price: PropTypes.number.isRequired,
-    urlImage: PropTypes.string.isRequired,
-  }).isRequired,
-};
+CartAddOrRemoveButtons.propTypes = propCard;
