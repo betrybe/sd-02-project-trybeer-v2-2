@@ -34,13 +34,20 @@ const createSale = async (sale, userId, name) => {
 const getSale = async (id, role) => {
   let result;
   if (role === 'client') {
-    result = await sales.findAll({
-      where: { user_id: id }, attributes: { exclude: ['published', 'updated'] },
-    });
+    result = await sales.findAll(
+      {
+        where: { user_id: id },
+        attributes: [
+          ['id', 'saleId'], ['delivery_address', 'deliveryAddress'], ['delivery_number', 'deliveryNumber'], ['sale_date', 'saleDate'], ['total_price', 'totalPrice'], 'status',
+        ],
+      },
+    );
   }
   if (role === 'administrator') {
     result = await sales.findAll({
-      attributes: { exclude: ['published', 'updated'] },
+      attributes: [
+        ['id', 'saleId'], ['delivery_address', 'deliveryAddress'], ['delivery_number', 'deliveryNumber'], ['sale_date', 'saleDate'], ['total_price', 'totalPrice'], 'status',
+      ],
     });
   }
   if (!result) return { error: true, message: 'No sale was found', code: 'not_found' };
@@ -48,33 +55,30 @@ const getSale = async (id, role) => {
   return result;
 };
 
-const getSaleProducts = async (role, userId, saleId) => {
+const getSaleProducts = async (role, userId, saleIdParam) => {
   let result;
   if (role === 'client') {
     result = await salesProducts.findAll({
-      where: { sale_id: saleId },
-      attributes: { exclude: ['id', 'product_id'] },
-      include: [
-        { model: sales, where: { user_id: userId }, attributes: ['total_price', 'status'] },
-        { model: products, attributes: ['name', 'price'] }],
+      where: { sale_id: saleIdParam },
+      attributes: ['quantity', 'sale_id'],
+      include: [{ model: sales, where: { user_id: userId }, attributes: ['total_price', 'sale_date', 'status'] }, { model: products, attributes: ['name', 'price'] }],
     });
   }
 
   if (role === 'administrator') {
     result = await salesProducts.findAll({
-      where: { sale_id: saleId },
-      attributes: { exclude: ['id', 'product_id'] },
-      include: [
-        { model: sales, attributes: ['total_price', 'status'] },
-        { model: products, attributes: ['name', 'price'] }],
+      where: { sale_id: saleIdParam },
+      attributes: ['quantity', 'sale_id'],
+      include: [{ model: sales, attributes: ['total_price', 'sale_date', 'status'] }, { model: products, attributes: ['name', 'price'] }],
     });
   }
   if (!result.length) return { error: true, message: 'Products of this sale were not found', code: 'not_found' };
 
   return result.map(({
-    sale_id: idSale, quantity, product: { name, price }, sale: { status, total_price: totalPrice },
+    sale_id: saleId, quantity,
+    product: { name, price }, sale: { sale_date: saleDate, status, total_price: totalPrice },
   }) => ({
-    saleId: idSale, quantity, name, price, status, totalPrice,
+    saleId, quantity, name, price, saleDate, status, totalPrice,
   }));
 };
 
