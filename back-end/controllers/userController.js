@@ -1,6 +1,6 @@
 const rescue = require('express-rescue');
 const schemasJoi = require('./schemasJoi');
-const userService = require('../service/userService');
+const userService = require('../services/userService');
 const { validateJoi } = require('./schemasJoi');
 
 const loginUser = rescue(async (req, res, next) => {
@@ -28,8 +28,8 @@ const createUser = rescue(async (req, res, next) => {
 const updateUserById = rescue(async (req, res, next) => {
   const isValid = await validateJoi(schemasJoi.updateUserById, req.body);
   if (isValid.error) return next(isValid);
-  const { name } = req.body;
   const { id } = req.user;
+  const { name } = req.body;
   const serviceAnswer = await userService.updateUserById(id, name);
   if (serviceAnswer.error) return next(serviceAnswer);
   return res.status(200).json(serviceAnswer);

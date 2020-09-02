@@ -1,2 +1,4 @@
 *.test.js
 serviceWorker.js
+
+models/index.js
