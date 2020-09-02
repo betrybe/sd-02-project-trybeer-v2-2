@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --watchAll",
+    "test-coverage": "jest --coverage",
     "debug": "nodemon index.js",
     "start:watch": "nodemon index.js"
   },
@@ -30,6 +31,7 @@
     "eslint": "^7.7.0",
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-plugin-import": "^2.22.0",
+    "jest": "^26.4.2",
     "nodemon": "^2.0.4",
     "sequelize-cli": "^6.2.0"
   }

@@ -3,10 +3,10 @@ const { users } = require('../models');
 
 const jwtSecret = process.env.JWT_SECRET;
 
-const loginJwt = async (req, _res, next) => {
+const validateJWT = async (req, _res, next) => {
   const { authorization: token } = req.headers;
   if (!token) {
-    next({ error: true, message: 'Token not found', code: 'invalid_data' });
+    return next({ error: true, message: 'Token not found', code: 'invalid_data' });
   }
   try {
     const validToken = jwt.verify(token, jwtSecret);
@@ -16,7 +16,7 @@ const loginJwt = async (req, _res, next) => {
       attributes: { exclude: ['published', 'updated'] },
     });
     if (!userExist) {
-      next({ error: true, message: 'User does not exist', code: 'invalid_data' });
+      return next({ error: true, message: 'User does not exist', code: 'invalid_data' });
     }
     const { dataValues: { password, ...noPass } } = userExist;
     req.user = noPass;
@@ -26,6 +26,4 @@ const loginJwt = async (req, _res, next) => {
   }
 };
 
-module.exports = {
-  loginJwt,
-};
+module.exports = validateJWT;
