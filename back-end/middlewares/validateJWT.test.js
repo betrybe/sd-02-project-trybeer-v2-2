@@ -34,13 +34,8 @@ describe('validate with JWT tests', () => {
   test('if validator returns message when token is OK and user not found', async () => {
     const jwtSecret = 'senhaParaTeste';
     const jwtConfig = { expiresIn: '300m', algorithm: 'HS256' };
-    const userData = {
-      id: 100, displayName: 'Johnatas Henrique', email: 'johnatas.henrique@gmail.com', image: null,
-    };
-
-    const decodeData = {
-      id: 100, displayName: 'Johnatas Henrique', email: 'johnatas.henrique@gmail.com', image: null, iat: 1597464316, exp: 1597482316,
-    };
+    const userData = { email: 'johnatas@gmail.com', password: '524288' };
+    const decodeData = { data: { email: 'johnatas@gmail.com', password: '524288' } };
     const token = jwt.sign(userData, jwtSecret, jwtConfig);
 
     const mockReq = { headers: { authorization: token } };
@@ -52,7 +47,9 @@ describe('validate with JWT tests', () => {
     await validateJWT(mockReq, null, mockNext);
 
     expect(getUserByIdSpy).toHaveBeenCalledTimes(1);
-    expect(getUserByIdSpy).toBeCalledWith(userData.id);
+    expect(getUserByIdSpy).toBeCalledWith(
+      { where: { email: 'johnatas@gmail.com' }, attributes: { exclude: ['published', 'updated'] } },
+    );
     expect(mockNext).toHaveBeenCalledTimes(1);
     expect(mockNext).toBeCalledWith(mockAnswer);
 
@@ -60,26 +57,24 @@ describe('validate with JWT tests', () => {
     decode.mockRestore();
   });
 
-  test.skip('if validator returns token when token is OK and user is found', async () => {
+  test('if validator returns token when token is OK and user is found', async () => {
     const jwtSecret = 'senhaParaTeste';
     const jwtConfig = { expiresIn: '300m', algorithm: 'HS256' };
-    const userData = {
-      id: 2, displayName: 'Johnatas Henrique', email: 'johnatas.henrique@gmail.com', image: null,
-    };
-    const decodeData = {
-      id: 2, displayName: 'Johnatas Henrique', email: 'johnatas.henrique@gmail.com', image: null, iat: 1597464316, exp: 1597482316,
-    };
+    const userData = { email: 'johnatas@gmail.com', password: '524288' };
+    const decodeData = { data: { email: 'johnatas@gmail.com', password: '524288' } };
     const token = jwt.sign(userData, jwtSecret, jwtConfig);
     const mockReq = { headers: { authorization: token } };
     const mockNext = jest.fn();
     const mockSequelize = { dataValues: userData, ...userData };
-    const getUserByIdSpy = jest.spyOn(users, 'findByPk').mockReturnValueOnce(mockSequelize);
+    const getUserByIdSpy = jest.spyOn(users, 'findOne').mockReturnValueOnce(mockSequelize);
     const decode = jest.spyOn(jwt, 'verify').mockReturnValueOnce(decodeData);
 
     await validateJWT(mockReq, null, mockNext);
 
     expect(getUserByIdSpy).toHaveBeenCalledTimes(1);
-    expect(getUserByIdSpy).toBeCalledWith(userData.id);
+    expect(getUserByIdSpy).toBeCalledWith(
+      { where: { email: 'johnatas@gmail.com' }, attributes: { exclude: ['published', 'updated'] } },
+    );
     expect(mockNext).toHaveBeenCalledTimes(1);
     expect(mockNext).toBeCalledWith();
 
