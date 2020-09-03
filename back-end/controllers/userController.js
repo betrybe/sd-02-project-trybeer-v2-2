@@ -16,10 +16,10 @@ const createUser = rescue(async (req, res, next) => {
   const isValid = await validateJoi(schemasJoi.createUser, req.body);
   if (isValid.error) return next(isValid);
   const {
-    name, email, password, role,
+    name, email, password, role: type,
   } = req.body;
   const serviceAnswer = await userService.createUser({
-    name, email, password, role,
+    name, email, password, type,
   });
   if (serviceAnswer.error) return next(serviceAnswer);
   return res.status(201).json(serviceAnswer);
@@ -35,7 +35,7 @@ const updateUserById = rescue(async (req, res, next) => {
   return res.status(200).json(serviceAnswer);
 });
 
-const getLoginUser = rescue(async (req, res) => res.json({ token: req.user }));
+const getLoginUser = rescue(async (req, res) => res.status(200).json({ token: req.user }));
 
 module.exports = {
   loginUser,
