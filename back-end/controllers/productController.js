@@ -1,9 +1,8 @@
 const rescue = require('express-rescue');
 const productService = require('../services/productService');
 
-const getAllProducts = rescue(async (_req, res, next) => {
+const getAllProducts = rescue(async (_req, res, _next) => {
   const serviceAnswer = await productService.getAllProducts();
-  if (serviceAnswer.error) return next(serviceAnswer);
   return res.status(200).json(serviceAnswer);
 });
 

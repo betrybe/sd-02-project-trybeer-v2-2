@@ -1,11 +1,8 @@
 const { products } = require('../models');
 
-const getAllProducts = async () => {
-  const prod = await products.findAll({
-    attributes: ['id', 'name', 'price', ['url_image', 'urlImage']],
-  });
-  return prod;
-};
+const getAllProducts = async () => products.findAll({
+  attributes: ['id', 'name', 'price', ['url_image', 'urlImage']],
+});
 
 const getProductById = async (id) => {
   const productAnswer = await products.findOne({
