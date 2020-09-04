@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import socketIOClient from 'socket.io-client';
 import PropTypes from 'prop-types';
 import './Chat.css';
@@ -20,11 +21,30 @@ const ListItem = ({ keyIndex, value }) => (
 
 const Chat = () => {
   const [inputValue, setInputValue] = useState('');
-  const [messages, setMessages] = useState([]);
+  const [chatMessages, setMessages] = useState([]);
 
   useEffect(() => {
-    socket.on('message', (msg) => {
-      setMessages((state) => [...state, msg]);
+    const { email, token } = JSON.parse(localStorage.getItem('user'))
+    const fetchMessages = async(sentMessages) => await axios({
+      method: 'get',
+      url: `http://localhost:3001/messages/${email}`,
+      headers: { Authorization: token}
+    })
+      .then(({ data: newMessages }) => {
+        return setMessages(newMessages);
+      })
+      .catch((err) => {
+        throw new Error(err.message, err.status);
+      })
+
+    socket.on('connect', (sentMessages) => {
+      fetchMessages(sentMessages);
+    });
+  }, [chatMessages])
+
+  useEffect(() => {
+    socket.on('message', (message) => {
+      setMessages((state) => [...state, message]);
     })
   }, [])
 
@@ -34,7 +54,7 @@ const Chat = () => {
       <div className="messagesBox">
         <ul id="message">
           {
-            messages.map((message, index) => <ListItem key={`${message}${index}`} keyIndex={index} value={message}/>)
+            chatMessages.map((message, index) => <ListItem key={`${message}${index}`} keyIndex={index} value={message}/>)
           }
         </ul>
       </div>

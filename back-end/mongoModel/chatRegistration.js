@@ -17,6 +17,18 @@ const registerMessages = async (userEmail, message) => {
     return addMessageForUser;
 }
 
+const getMessages = async (userEmail) => {
+  const [{ messages }] = await connection()
+    .then((db) => db.collection('chat').find(
+      {
+        email: userEmail,
+      }).toArray())
+    .catch((err) => {
+      throw new Error(err.message, err.status);
+    });
+  return messages;
+}
 module.exports = {
   registerMessages,
+  getMessages,
 };

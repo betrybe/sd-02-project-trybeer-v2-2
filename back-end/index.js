@@ -38,6 +38,8 @@ app.post('/sales', middlewares.loginJwt, saleController.createSale);
 app.get('/sales/:id', middlewares.loginJwt, saleController.getSaleProducts);
 app.patch('/sales/:id', middlewares.loginJwt, saleController.updateSaleById);
 
+app.get('/messages/:email', middlewares.loginJwt, chatController.getMessages);
+
 app.use(errorController.promiseErrors);
 
 app.all('*', errorController.endpointNotFound);
@@ -54,7 +56,7 @@ io.on('connection', async (socket) => {
   });
   socket.on('message', async (msg) => {
     io.to(socket.id).emit('message', `${msg}`);
-    if(handshake && msg) await chatController.registerMessage(handshake.email, msg);
+    if(handshake && msg) chatController.registerMessage(handshake.email, msg);
   });
 });
 
