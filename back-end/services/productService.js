@@ -4,7 +4,6 @@ const getAllProducts = async () => {
   const prod = await products.findAll({
     attributes: ['id', 'name', 'price', ['url_image', 'urlImage']],
   });
-  console.log('p', prod);
   return prod;
 };
 

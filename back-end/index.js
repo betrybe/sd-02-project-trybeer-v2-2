@@ -26,7 +26,6 @@ app.post('/users', userController.createUser);
 app.get('/login', middlewares.loginJwt, userController.getLoginUser);
 
 app.post('/login', userController.loginUser);
-app.post('/users', userController.createUser);
 
 app.patch('/users/me', middlewares.loginJwt, userController.updateUserById);
 
@@ -49,7 +48,7 @@ app.listen(NODE_PORT, () => console.log(`Listening on ${NODE_PORT}`));
 
 io.on('connection', (socket) => {
   socket.on('message', (msg) => {
-    io.emit('message', `${msg}`);
+    io.to(socket.id).emit('message', `${msg}`);
   });
 });
 
