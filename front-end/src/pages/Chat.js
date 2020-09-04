@@ -8,6 +8,8 @@ const socket = socketIOClient(ENDPOINT);
 
 const submitForm = (e, value, clearInput) => {
   e.preventDefault();
+  const userData = JSON.parse(localStorage.getItem('user'));
+  socket.emit('handshake', userData)
   socket.emit('message', value);
   clearInput('');
 };

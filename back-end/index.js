@@ -11,6 +11,7 @@ const errorController = require('./controllers/errorController');
 const userController = require('./controllers/userController');
 const productController = require('./controllers/productController');
 const saleController = require('./controllers/saleController');
+const chatController = require('./controllers/chatController');
 const middlewares = require('./middlewares/validateJwt');
 
 const app = express();
@@ -46,9 +47,14 @@ const CHAT_PORT = process.env.CHAT_PORT || 5000;
 
 app.listen(NODE_PORT, () => console.log(`Listening on ${NODE_PORT}`));
 
-io.on('connection', (socket) => {
-  socket.on('message', (msg) => {
+io.on('connection', async (socket) => {
+  let handshake;
+  socket.on('handshake', (data) => {
+    handshake = data;
+  });
+  socket.on('message', async (msg) => {
     io.to(socket.id).emit('message', `${msg}`);
+    if(handshake && msg) await chatController.registerMessage(handshake.email, msg);
   });
 });
 
