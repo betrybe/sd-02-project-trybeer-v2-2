@@ -3,10 +3,9 @@ const createSalesModel = (sequelize, DataTypes) => {
     total_price: { type: DataTypes.DECIMAL(9, 2) },
     delivery_address: { type: DataTypes.STRING },
     delivery_number: { type: DataTypes.STRING },
-    sale_date: { type: DataTypes.DATE },
     status: { type: DataTypes.STRING },
   }, {
-    createdAt: 'published',
+    createdAt: 'sale_date',
     updatedAt: 'updated',
   });
 

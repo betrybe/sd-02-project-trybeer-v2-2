@@ -4,30 +4,24 @@ const { products, sales, sales_products: salesProducts } = require('../models');
 const createSale = async (sale, userId, name) => {
   const { products: quantities, deliveryAddress, deliveryNumber } = sale;
   const productIds = quantities.map(({ productId }) => productId);
-  const productsInfo = await products.findAll({
-    where: { id: { [Op.in]: productIds } },
-  });
-
+  const productsInfo = await products.findAll({ where: { id: { [Op.in]: productIds } } });
   if (productsInfo.length !== quantities.length) {
     return { error: true, message: 'Some products can not be found', code: 'invalid_data' };
   }
-
   const totalPrice = productsInfo.reduce((total, product) => {
     const productQuantity = quantities.find((quantity) => quantity.productId === product.id);
     return total + (productQuantity.quantity * product.price);
   }, 0);
 
-  const saleDate = new Date().toISOString().replace('T', ' ').substring(0, 19);
-
   const newSale = await sales.create({
-    user_id: userId, total_price: totalPrice, delivery_address: deliveryAddress, delivery_number: deliveryNumber, sale_date: saleDate, status: 'Pendente',
+    user_id: userId, total_price: totalPrice, delivery_address: deliveryAddress, delivery_number: deliveryNumber, status: 'Pendente',
   });
 
   await quantities.forEach(async ({ productId, quantity }) => salesProducts
     .create({ sale_id: newSale.id, product_id: productId, quantity }));
 
   return {
-    user: name, saleId: newSale.id, date: saleDate, total: totalPrice,
+    user: name, saleId: newSale.id, date: newSale.sale_date, total: totalPrice,
   };
 };
 
@@ -51,7 +45,6 @@ const getSale = async (id, role) => {
     });
   }
   if (!result) return { error: true, message: 'No sale was found', code: 'not_found' };
-
   return result;
 };
 
