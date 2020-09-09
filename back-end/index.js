@@ -17,6 +17,7 @@ const { validateJWT, promiseErrors, endpointNotFound } = require('./middlewares'
 
 const app = express();
 app.use(cors());
+app.use(promiseErrors);
 
 app.use('/images', express.static(path.join(__dirname, 'public/images')));
 
@@ -40,8 +41,6 @@ app.get('/sales/:id', validateJWT, saleController.getSaleProducts);
 app.patch('/sales/:id', validateJWT, saleController.updateSaleById);
 
 app.get('/messages/:email', middlewares.loginJwt, chatController.getMessages);
-
-app.use(promiseErrors);
 
 app.all('*', endpointNotFound);
 

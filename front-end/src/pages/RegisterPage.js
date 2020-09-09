@@ -6,6 +6,20 @@ import '../styles/RegisterPage.css';
 
 const MAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
+const addLocalStorage = ({
+  name, email, token, role,
+}) => {
+  localStorage.setItem('user', JSON.stringify({
+    name, email, token, role,
+  }));
+};
+
+const registerRedirect = (role) => (
+  role === 'client'
+    ? history.push('/products')
+    : history.push('/admin/orders')
+);
+
 const textAndCheckboxInputs = (type, text, valueOrChecked, setValue, testId, role) => (
   <label htmlFor={text} className={`label-${text}`}>
     {text}
@@ -46,14 +60,6 @@ const sendLoginRequest = async (email, password, setErrorMessage) => {
     : registerRedirect(loginData.data.role);
 };
 
-const addLocalStorage = ({
-  name, email, token, role,
-}) => {
-  localStorage.setItem('user', JSON.stringify({
-    name, email, token, role,
-  }));
-};
-
 const requestRegister = async ({
   nameData, emailData, passData, sellerData,
 }, setSuccessOrError) => {
@@ -72,12 +78,6 @@ const requestRegister = async ({
   return setSuccessOrError({ message: resp.data.error.message });
 };
 
-const registerRedirect = (role) => (
-  role === 'client'
-    ? history.push('/products')
-    : history.push('/admin/orders')
-);
-
 const verifyValues = (inputsData) => {
   if (!inputsData.nameData || inputsData.nameData.length < 12 || typeof inputsData.nameData !== 'string') {
     return { error: 'name' };
@@ -92,10 +92,10 @@ const verifyValues = (inputsData) => {
 };
 
 const clearFields = (setInputsData) => setInputsData({
-    emailData: '',
-    passData: '',
-    nameData: '',
-    sellerData: false,
+  emailData: '',
+  passData: '',
+  nameData: '',
+  sellerData: false,
 });
 
 const handleSubmit = async (event, inputsData, setInputsData, setSuccessOrError) => {
@@ -111,14 +111,16 @@ const handleSubmit = async (event, inputsData, setInputsData, setSuccessOrError)
     setInputsData((prev) => ({ ...prev, emailData: '' }));
     return event.preventDefault();
   }
+
   if (isValid.error === 'pass') {
     alert('A senha deve conter ao menos 6 números');
     setInputsData((prev) => ({ ...prev, passData: '' }));
     return event.preventDefault();
   }
+
   clearFields(setInputsData);
   requestRegister(inputsData, setSuccessOrError);
-  event.preventDefault();
+  return event.preventDefault();
 };
 
 const RegisterPage = () => {
