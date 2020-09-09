@@ -30,16 +30,12 @@ const Chat = () => {
       url: `http://localhost:3001/messages/${email}`,
       headers: { Authorization: token}
     })
-      .then(({ data: newMessages }) => {
-        return setMessages(newMessages);
-      })
+      .then(({ data: newMessages }) => setMessages(newMessages))
       .catch((err) => {
         throw new Error(err.message, err.status);
       })
 
-    socket.on('connect', (sentMessages) => {
-      fetchMessages(sentMessages);
-    });
+    socket.on('connect', (sentMessages) => fetchMessages(sentMessages));
   }, [chatMessages])
 
   useEffect(() => {
