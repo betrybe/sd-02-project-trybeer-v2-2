@@ -13,11 +13,8 @@ const loginUser = async (email, paramPassword) => {
     where: { email },
     attributes: { exclude: ['published', 'updated'] },
   });
-  if (!result) {
-    return { error: true, message: 'E-mail not found.', code: 'unauthorized' };
-  }
-  if (result.password !== paramPassword) {
-    return { error: true, message: 'The password does not match.', code: 'unauthorized' };
+  if (!result || result.password !== paramPassword) {
+    return { error: true, message: 'No user was matched', code: 'unauthorized' };
   }
   const { dataValues: { id, password, ...userInfo } } = result;
   const token = jwt.sign({ data: userInfo }, jwtSecret, jwtConfig);
@@ -27,18 +24,18 @@ const loginUser = async (email, paramPassword) => {
 
 const createUser = async (userInfo) => {
   const {
-    name, email, password, role,
+    name, email, password, type,
   } = userInfo;
   const result = await users.findOne({
     where: { email },
     attributes: { exclude: ['published', 'updated'] },
   });
   if (result) {
-    return { error: true, message: 'E-mail already in database.', code: 'already_exists' };
+    return { error: true, message: 'E-mail already in database', code: 'already_exists' };
   }
-  const stringRole = role === 'true' ? 'administrator' : 'client';
+  const role = type === 'true' ? 'administrator' : 'client';
   const createdUser = await users.create({
-    name, email, password, role: stringRole,
+    name, email, password, role,
   });
   return createdUser;
 };
@@ -46,7 +43,7 @@ const createUser = async (userInfo) => {
 const updateUserById = async (id, name) => {
   const userExists = await users.findByPk(id);
   if (!userExists) {
-    return { error: true, message: 'User not found.', code: 'unauthorized' };
+    return { error: true, message: 'User not found', code: 'unauthorized' };
   }
   await users.update({ name }, { where: { id } });
   const result = await users.findOne(
