@@ -36,7 +36,6 @@ const sendLoginRequest = async (email, password, setErrorMessage) => {
     headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
   })
     .catch(({ response }) => response);
-  // .catch(({ response: { status, data: { error: { message }}} }) => setErrorMessage(`Error: ${status}. ${message}`));
 
   if (!loginData) return setErrorMessage('Error: Falha de Conexão');
 
@@ -45,11 +44,6 @@ const sendLoginRequest = async (email, password, setErrorMessage) => {
   return loginData.data.error
     ? setErrorMessage(`Error: ${loginData.status}. ${loginData.data.error.message}`)
     : registerRedirect(loginData.data.role);
-
-  /*  .catch(({ response: { data: { error } } }) => setErrorMessage(error));
-  if (loginData) addLocalStorage(loginData.data);
-
-  return loginData ? registerRedirect(loginData.data.role) : null; */
 };
 
 const addLocalStorage = ({
@@ -74,7 +68,7 @@ const requestRegister = async ({
     .catch(({ response }) => response);
 
   if (!resp) return setSuccessOrError({ message: 'Falha de conexão' });
-  if (!resp.data.error) return await sendLoginRequest(emailData, passData, setSuccessOrError);
+  if (!resp.data.error) return sendLoginRequest(emailData, passData, setSuccessOrError);
   return setSuccessOrError({ message: resp.data.error.message });
 };
 
@@ -88,7 +82,7 @@ const verifyValues = (inputsData) => {
   if (!inputsData.nameData || inputsData.nameData.length < 12 || typeof inputsData.nameData !== 'string') {
     return { error: 'name' };
   }
-  if (!inputsData.passData || inputsData.passData.length < 6 || isNaN(inputsData.passData)) {
+  if (!inputsData.passData || inputsData.passData.length < 6 || typeof inputsData.passData !== 'number') {
     return { error: 'pass' };
   }
   if (!inputsData.emailData.match(MAIL_REGEX)) {
@@ -97,14 +91,12 @@ const verifyValues = (inputsData) => {
   return true;
 };
 
-const clearFields = (setInputsData) => {
-  setInputsData({
+const clearFields = (setInputsData) => setInputsData({
     emailData: '',
     passData: '',
     nameData: '',
     sellerData: false,
-  });
-};
+});
 
 const handleSubmit = async (event, inputsData, setInputsData, setSuccessOrError) => {
   const isValid = verifyValues(inputsData);
@@ -113,6 +105,7 @@ const handleSubmit = async (event, inputsData, setInputsData, setSuccessOrError)
     setInputsData((prev) => ({ ...prev, nameData: '' }));
     return event.preventDefault();
   }
+
   if (isValid.error === 'email') {
     alert('Formato de Email invalido');
     setInputsData((prev) => ({ ...prev, emailData: '' }));

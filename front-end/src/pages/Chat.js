@@ -25,7 +25,7 @@ const Chat = () => {
 
   useEffect(() => {
     const { email, token } = JSON.parse(localStorage.getItem('user'));
-    const fetchMessages = async() => axios({
+    const fetchMessages = async () => axios({
       method: 'get',
       url: `http://localhost:3001/messages/${email}`,
       headers: { Authorization: token },
@@ -60,7 +60,7 @@ const Chat = () => {
               <input className="messageInput" value={inputValue} onChange={(e) => setInputValue(e.target.value)} />
             </div>
             <div className="buttonContainer">
-              <button type="type" onClick={(e) => submitForm(e, inputValue, setInputValue)}>Send</button>
+              <button type="button" onClick={(e) => submitForm(e, inputValue, setInputValue)}>Send</button>
             </div>
           </form>
         </div>

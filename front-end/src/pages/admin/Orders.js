@@ -19,7 +19,7 @@ export default function AdminOrders() {
         headers: { Accept: 'application/json', 'Content-Type': 'application/json', Authorization: token },
       })
         .catch(({ response: { status } }) => status === 401 && history.push('/login'));
-      return orders && setorders(ordersData.data);
+      return orders && setOrdersData(ordersData.data);
     };
 
     getOrders();

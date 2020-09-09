@@ -107,7 +107,7 @@ const LoginScreen = () => {
 
   if (shouldRegister) return <Redirect to="/register" />;
 
-  const interactiveFormField = (formName, type, formValidation) => (
+  const interactiveFormField = (formName, type, validation) => (
     <label className="form-label" htmlFor={formName}>
       {type.charAt(0).toUpperCase() + type.slice(1)}
       <br />
@@ -116,7 +116,7 @@ const LoginScreen = () => {
         id={formName}
         className="form-field"
         data-testid={formName}
-        onChange={(e) => formValidation(
+        onChange={(e) => validation(
           [type, e.target.value],
           setPassData,
           setIsPasswordGood,

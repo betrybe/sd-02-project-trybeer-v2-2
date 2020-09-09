@@ -2,7 +2,7 @@ const chatRegistration = require('../mongoModel/chatRegistration');
 
 const registerMessage = async (
   userEmail, message,
-  ) => chatRegistration.registerMessages(userEmail, message);
+) => chatRegistration.registerMessages(userEmail, message);
 
 const getMessages = async (req, res) => {
   const { email } = req.user;

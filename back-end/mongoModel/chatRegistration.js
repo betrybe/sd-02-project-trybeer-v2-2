@@ -22,7 +22,7 @@ const getMessages = async (userEmail) => {
     .then((db) => db.collection('chat').find(
       {
         email: userEmail,
-      }
+      },
     ).toArray())
     .catch((err) => {
       throw new Error(err.message, err.status);
