@@ -11,10 +11,9 @@ const userController = require('./controllers/userController');
 const productController = require('./controllers/productController');
 const saleController = require('./controllers/saleController');
 const chatController = require('./controllers/chatController');
-const middlewares = require('./middlewares/validateJwt');
+const middlewares = require('./middlewares/validateJWT');
 
 const { validateJWT, promiseErrors, endpointNotFound } = require('./middlewares');
-
 
 const app = express();
 app.use(cors());
@@ -40,11 +39,9 @@ app.post('/sales', validateJWT, saleController.createSale);
 app.get('/sales/:id', validateJWT, saleController.getSaleProducts);
 app.patch('/sales/:id', validateJWT, saleController.updateSaleById);
 
-
 app.get('/messages/:email', middlewares.loginJwt, chatController.getMessages);
 
 app.use(promiseErrors);
-
 
 app.all('*', endpointNotFound);
 
@@ -60,7 +57,7 @@ io.on('connection', async (socket) => {
   });
   socket.on('message', async (msg) => {
     io.to(socket.id).emit('message', `${msg}`);
-    if(handshake && msg) chatController.registerMessage(handshake.email, msg);
+    if (handshake && msg) chatController.registerMessage(handshake.email, msg);
   });
 });
 
