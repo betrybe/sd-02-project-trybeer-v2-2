@@ -33,32 +33,17 @@ const addLocalStorage = ({
   }));
 };
 
-const requestRegister = async ({
-  nameData, emailData, passData, sellerData,
-}, setSuccessOrError) => {
-  const role = (sellerData) ? 'true' : 'false';
-  const resp = await axios.post('http://localhost:3001/users',
-    {
-      name: nameData,
-      email: emailData,
-      password: passData,
-      role,
-    })
-    .catch(({ response }) => response);
-
-  if (!resp) return setSuccessOrError({ message: 'Falha de conexão' });
-  if (!resp.data.error) return sendLoginRequest(emailData, passData, setSuccessOrError);
-  return setSuccessOrError({ message: resp.data.error.message });
-};
+const registerRedirect = (role) => (
+  role === 'client'
+    ? history.push('/products')
+    : history.push('/admin/orders')
+);
 
 const sendLoginRequest = async (email, password, setErrorMessage) => {
   const loginData = await axios({
     baseURL: 'http://localhost:3001/login',
     method: 'post',
-    data: {
-      email,
-      password,
-    },
+    data: { email, password },
     headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
   })
     .catch(({ response }) => response);
@@ -77,11 +62,20 @@ const sendLoginRequest = async (email, password, setErrorMessage) => {
   return loginData ? registerRedirect(loginData.data.role) : null; */
 };
 
-const registerRedirect = (role) => (
-  role === 'client'
-    ? history.push('/products')
-    : history.push('/admin/orders')
-);
+const requestRegister = async ({
+  nameData, emailData, passData, sellerData,
+}, setSuccessOrError) => {
+  const role = (sellerData) ? 'true' : 'false';
+  const resp = await axios.post('http://localhost:3001/users',
+    {
+      name: nameData, email: emailData, password: passData, role,
+    })
+    .catch(({ response }) => response);
+
+  if (!resp) return setSuccessOrError({ message: 'Falha de conexão' });
+  if (!resp.data.error) return sendLoginRequest(emailData, passData, setSuccessOrError);
+  return setSuccessOrError({ message: resp.data.error.message });
+};
 
 const verifyValues = (inputsData) => {
   if (!inputsData.nameData || inputsData.nameData.length < 12 || typeof inputsData.nameData !== 'string') {
