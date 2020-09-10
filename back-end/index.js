@@ -5,12 +5,15 @@ const path = require('path');
 const cors = require('cors');
 
 const http = require('http').createServer(express());
-const io = require('socket.io')(http);
+const sockets = require('socket.io')(http);
 
 const userController = require('./controllers/userController');
 const productController = require('./controllers/productController');
 const saleController = require('./controllers/saleController');
-const { validateJWT, promiseErrors, endpointNotFound } = require('./middlewares');
+const {
+  validateJWT, promiseErrors, endpointNotFound,
+} = require('./middlewares');
+const chatController = require('./controllers/chatController');
 
 const app = express();
 app.use(cors());
@@ -25,7 +28,6 @@ app.post('/users', userController.createUser);
 app.get('/login', validateJWT, userController.getLoginUser);
 
 app.post('/login', userController.loginUser);
-app.post('/users', userController.createUser);
 
 app.patch('/users/me', validateJWT, userController.updateUserById);
 
@@ -38,6 +40,9 @@ app.get('/sales/:id', validateJWT, saleController.getSaleProducts);
 app.patch('/sales/:id', validateJWT, saleController.updateSaleById);
 
 app.use(promiseErrors);
+app.get('/messages/:email', validateJWT, chatController.getMessages);
+
+app.use(promiseErrors);
 
 app.all('*', endpointNotFound);
 
@@ -46,9 +51,14 @@ const CHAT_PORT = process.env.CHAT_PORT || 5000;
 
 app.listen(NODE_PORT, () => console.log(`Listening on ${NODE_PORT}`));
 
-io.on('connection', (socket) => {
-  socket.on('message', (msg) => {
-    io.emit('message', `${msg}`);
+sockets.on('connection', async (socket) => {
+  let handshake;
+  socket.on('handshake', (data) => {
+    handshake = data;
+  });
+  socket.on('message', async (msg) => {
+    sockets.to(socket.id).emit('message', `${msg}`);
+    if (handshake && msg) chatController.registerMessage(handshake.email, msg);
   });
 });
 

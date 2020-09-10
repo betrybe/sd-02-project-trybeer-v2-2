@@ -25,18 +25,28 @@ const textAndCheckboxInputs = (type, text, valueOrChecked, setValue, testId, rol
   </label>
 );
 
+const addLocalStorage = ({
+  name, email, token, role,
+}) => {
+  localStorage.setItem('user', JSON.stringify({
+    name, email, token, role,
+  }));
+};
+
+const registerRedirect = (role) => (
+  role === 'client'
+    ? history.push('/products')
+    : history.push('/admin/orders')
+);
+
 const sendLoginRequest = async (email, password, setErrorMessage) => {
   const loginData = await axios({
     baseURL: 'http://localhost:3001/login',
     method: 'post',
-    data: {
-      email,
-      password,
-    },
+    data: { email, password },
     headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
   })
     .catch(({ response }) => response);
-  // .catch(({ response: { status, data: { error: { message }}} }) => setErrorMessage(`Error: ${status}. ${message}`));
 
   if (!loginData) return setErrorMessage('Error: Falha de Conexão');
 
@@ -52,43 +62,26 @@ const sendLoginRequest = async (email, password, setErrorMessage) => {
   return loginData ? registerRedirect(loginData.data.role) : null; */
 };
 
-const addLocalStorage = ({
-  name, email, token, role,
-}) => {
-  localStorage.setItem('user', JSON.stringify({
-    name, email, token, role,
-  }));
-};
-
 const requestRegister = async ({
   nameData, emailData, passData, sellerData,
 }, setSuccessOrError) => {
   const role = (sellerData) ? 'true' : 'false';
   const resp = await axios.post('http://localhost:3001/users',
     {
-      name: nameData,
-      email: emailData,
-      password: passData,
-      role,
+      name: nameData, email: emailData, password: passData, role,
     })
     .catch(({ response }) => response);
 
   if (!resp) return setSuccessOrError({ message: 'Falha de conexão' });
-  if (!resp.data.error) return await sendLoginRequest(emailData, passData, setSuccessOrError);
+  if (!resp.data.error) return sendLoginRequest(emailData, passData, setSuccessOrError);
   return setSuccessOrError({ message: resp.data.error.message });
 };
-
-const registerRedirect = (role) => (
-  role === 'client'
-    ? history.push('/products')
-    : history.push('/admin/orders')
-);
 
 const verifyValues = (inputsData) => {
   if (!inputsData.nameData || inputsData.nameData.length < 12 || typeof inputsData.nameData !== 'string') {
     return { error: 'name' };
   }
-  if (!inputsData.passData || inputsData.passData.length < 6 || isNaN(inputsData.passData)) {
+  if (!inputsData.passData || inputsData.passData.length < 6 || Number.isNaN(inputsData.passData)) {
     return { error: 'pass' };
   }
   if (!inputsData.emailData.match(MAIL_REGEX)) {
@@ -126,6 +119,7 @@ const handleSubmit = async (event, inputsData, setInputsData, setSuccessOrError)
   clearFields(setInputsData);
   requestRegister(inputsData, setSuccessOrError);
   event.preventDefault();
+  return null;
 };
 
 const RegisterPage = () => {

@@ -120,6 +120,6 @@ export const propCard = {
     price: PropTypes.number.isRequired,
     urlImage: PropTypes.string.isRequired,
   }).isRequired,
-}
+};
 
 CartAddOrRemoveButtons.propTypes = propCard;
