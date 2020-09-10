@@ -41,7 +41,7 @@ export default function TopMenu() {
       else if (pathname.match(/orders\/[0-9]+/g)) setHeaderTitle('Detalhes de Pedido');
       else setHeaderTitle('TryBeer');
     }
-    return (() => {})
+    return (() => {});
   }, [pathname]);
 
   return displayTopMenu && renderPageComponents(toggleSideMenu, headerTitle);

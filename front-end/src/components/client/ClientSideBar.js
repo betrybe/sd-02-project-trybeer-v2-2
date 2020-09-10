@@ -15,18 +15,17 @@ const SideBar = () => {
   return (!showSideMenu) || (
     <div className="side-menu-container">
       <div className="side-menu-top-container">
-        <button type="button"
+        <button
+          type="button"
           data-testid="side-menu-item-products"
-          onClick={() =>
-          redirectButton(setShowSideMenu, '/products')}
+          onClick={() => redirectButton(setShowSideMenu, '/products')}
         >
           Produtos
         </button>
         <button
           type="button"
           data-testid="side-menu-item-my-orders"
-          onClick={() =>
-          redirectButton(setShowSideMenu, '/orders')}
+          onClick={() => redirectButton(setShowSideMenu, '/orders')}
         >
           Meus Pedidos
         </button>

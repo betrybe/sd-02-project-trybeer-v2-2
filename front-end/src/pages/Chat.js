@@ -10,7 +10,7 @@ const socket = socketIOClient(ENDPOINT);
 const submitForm = (e, value, clearInput) => {
   e.preventDefault();
   const userData = JSON.parse(localStorage.getItem('user'));
-  socket.emit('handshake', userData)
+  socket.emit('handshake', userData);
   socket.emit('message', value);
   clearInput('');
 };
@@ -19,19 +19,21 @@ const ListItem = ({ keyIndex, value }) => (
   <li key={keyIndex}>{value}</li>
 );
 
-const MessageBox = ({ chat }) => {
-  return (
-    <div className="messagesBox">
-      <ul id="message">
-        {
-          chat.map((message, index) => <ListItem
-            key={`${message}${index}`} keyIndex={index} value={message}
-          />)
-        }
-      </ul>
-    </div>
-  );
-};
+const MessageBox = ({ chat }) => (
+  <div className="messagesBox">
+    <ul id="message">
+      {
+        chat.map((message, index) => (
+          <ListItem
+            key={message}
+            keyIndex={index}
+            value={message}
+          />
+        ))
+      }
+    </ul>
+  </div>
+);
 
 const FormList = () => {
   const [inputValue, setInputValue] = useState('');
@@ -53,36 +55,34 @@ const FormList = () => {
         </button>
       </div>
     </form>
-  )
-}
+  );
+};
 
 const Chat = () => {
   const [chatMessages, setMessages] = useState([]);
 
   useEffect(() => {
-    const { email, token } = JSON.parse(localStorage.getItem('user'))
-    const fetchMessages = async () => await axios({
+    const { email, token } = JSON.parse(localStorage.getItem('user'));
+    const fetchMessages = async () => axios({
       method: 'get',
       url: `http://localhost:3001/messages/${email}`,
-      headers: { Authorization: token }
+      headers: { Authorization: token },
     })
-      .then(({ data: newMessages }) => {
-        return setMessages(newMessages);
-      })
+      .then(({ data: newMessages }) => setMessages(newMessages))
       .catch((err) => {
         throw new Error(err.message, err.status);
-      })
+      });
 
     socket.on('connect', (sentMessages) => {
       fetchMessages(sentMessages);
     });
-  }, [chatMessages])
+  }, [chatMessages]);
 
   useEffect(() => {
     socket.on('message', (message) => {
       setMessages((state) => [...state, message]);
-    })
-  }, [])
+    });
+  }, []);
 
   return (
     <div className="firstContainer">
