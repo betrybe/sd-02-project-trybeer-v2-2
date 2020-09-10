@@ -5,7 +5,7 @@ const path = require('path');
 const cors = require('cors');
 
 const http = require('http').createServer(express());
-const io = require('socket.io')(http);
+const sockets = require('socket.io')(http);
 
 const userController = require('./controllers/userController');
 const productController = require('./controllers/productController');
@@ -51,13 +51,13 @@ const CHAT_PORT = process.env.CHAT_PORT || 5000;
 
 app.listen(NODE_PORT, () => console.log(`Listening on ${NODE_PORT}`));
 
-io.on('connection', async (socket) => {
+sockets.on('connection', async (socket) => {
   let handshake;
   socket.on('handshake', (data) => {
     handshake = data;
   });
   socket.on('message', async (msg) => {
-    io.to(socket.id).emit('message', `${msg}`);
+    sockets.to(socket.id).emit('message', `${msg}`);
     if (handshake && msg) chatController.registerMessage(handshake.email, msg);
   });
 });

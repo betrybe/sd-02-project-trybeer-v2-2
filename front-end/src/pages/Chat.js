@@ -19,13 +19,49 @@ const ListItem = ({ keyIndex, value }) => (
   <li key={keyIndex}>{value}</li>
 );
 
-const Chat = () => {
+const MessageBox = ({ chat }) => {
+  return (
+    <div className="messagesBox">
+      <ul id="message">
+        {
+          chat.map((message, index) => <ListItem
+            key={`${message}${index}`} keyIndex={index} value={message}
+          />)
+        }
+      </ul>
+    </div>
+  );
+};
+
+const FormList = () => {
   const [inputValue, setInputValue] = useState('');
+  return (
+    <form action="">
+      <div className="containerInput">
+        <input
+          className="messageInput"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+        />
+      </div>
+      <div className="buttonContainer">
+        <button
+          type="submit"
+          onClick={(e) => submitForm(e, inputValue, setInputValue)}
+        >
+          Send
+        </button>
+      </div>
+    </form>
+  )
+}
+
+const Chat = () => {
   const [chatMessages, setMessages] = useState([]);
 
   useEffect(() => {
     const { email, token } = JSON.parse(localStorage.getItem('user'))
-    const fetchMessages = async (sentMessages) => await axios({
+    const fetchMessages = async () => await axios({
       method: 'get',
       url: `http://localhost:3001/messages/${email}`,
       headers: { Authorization: token }
@@ -51,33 +87,9 @@ const Chat = () => {
   return (
     <div className="firstContainer">
       <div className="chatContainer">
-        <div className="messagesBox">
-          <ul id="message">
-            {
-              chatMessages.map((message, index) => <ListItem
-                key={`${message}${index}`} keyIndex={index} value={message}
-              />)
-            }
-          </ul>
-        </div>
+        <MessageBox chat={chatMessages} />
         <div className="inputMessageContainer">
-          <form action="">
-            <div className="containerInput">
-              <input
-                className="messageInput"
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-              />
-            </div>
-            <div className="buttonContainer">
-              <button
-                type="button"
-                onClick={(e) => submitForm(e, inputValue, setInputValue)}
-              >
-                Send
-              </button>
-            </div>
-          </form>
+          <FormList />
         </div>
       </div>
     </div>
@@ -89,4 +101,8 @@ export default Chat;
 ListItem.propTypes = {
   keyIndex: PropTypes.number.isRequired,
   value: PropTypes.string.isRequired,
+};
+
+MessageBox.propTypes = {
+  chat: PropTypes.instanceOf(Object).isRequired,
 };
