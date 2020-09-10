@@ -13,13 +13,13 @@ export default function AdminOrders() {
     const token = checkLogin();
 
     const getOrders = async () => {
-      const ordersData = await axios({
+      const ordersInfo = await axios({
         baseURL: 'http://localhost:3001/sales',
         method: 'get',
         headers: { Accept: 'application/json', 'Content-Type': 'application/json', Authorization: token },
       })
         .catch(({ response: { status } }) => status === 401 && history.push('/login'));
-      return ordersData && setOrdersData(ordersData.data);
+      return ordersInfo && setOrdersData(ordersInfo.data);
     };
 
     getOrders();
