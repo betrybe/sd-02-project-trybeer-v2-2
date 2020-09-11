@@ -43,10 +43,10 @@ export default function OrderCard({
 
 OrderCard.propTypes = {
   orders: PropTypes.shape({
-    totalPrice: PropTypes.number.isRequired,
+    totalPrice: PropTypes.string.isRequired,
     status: PropTypes.string.isRequired,
     saleId: PropTypes.number.isRequired,
-    deliveryNumber: PropTypes.number.isRequired,
+    deliveryNumber: PropTypes.string.isRequired,
     deliveryAddress: PropTypes.string.isRequired,
   }).isRequired,
   index: PropTypes.number.isRequired,

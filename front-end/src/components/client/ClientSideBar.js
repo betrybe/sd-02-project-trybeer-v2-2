@@ -1,6 +1,8 @@
 import React, { useContext } from 'react';
+import axios from 'axios';
 import { TrybeerContext } from '../../context/TrybeerContext';
 import history from '../../services/history';
+import checkLogin from '../../services/checkLogin';
 
 import '../../styles/ClientSideBar.css';
 
@@ -8,6 +10,16 @@ const redirectButton = (setShowSideMenu, route) => {
   setShowSideMenu(false);
   if (route === '/login') localStorage.removeItem('user');
   history.push(`${route}`);
+};
+
+const newChat = async (setShowSideMenu, route) => {
+  const token = checkLogin();
+  const connectInfo = await axios({
+    baseURL: 'http://localhost:3001/users/chat/connect',
+    method: 'post',
+    headers: { Accept: 'application/json', 'Content-Type': 'application/json', Authorization: token },
+  });
+  console.log('front', connectInfo);
 };
 
 const SideBar = () => {
@@ -39,7 +51,7 @@ const SideBar = () => {
         <button
           type="button"
           data-testid="side-menu-item-chat-with-store"
-          onClick={() => redirectButton(setShowSideMenu, '/chat')}
+          onClick={() => newChat(setShowSideMenu, '/chat')}
         >
           Conversar com a loja
         </button>

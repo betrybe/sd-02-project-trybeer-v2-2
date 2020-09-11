@@ -1,5 +1,12 @@
 const connection = require('./connection');
 
+const newOnlineUser = async (id, name, email, role) => {
+  const db = await connection();
+  await db.collection('onlineUsers').insertOne({
+    userId: id, name, email, role,
+  });
+};
+
 const registerMessages = async (userEmail, message) => {
   const addMessageForUser = await connection()
     .then((db) => db.collection('chat').updateOne(
@@ -20,6 +27,7 @@ const getMessages = async (userEmail) => {
   return messages;
 };
 module.exports = {
+  newOnlineUser,
   registerMessages,
   getMessages,
 };
