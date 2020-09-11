@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 const ENDPOINT_ADMIN = 'http://localhost:5000/admin';
 const socketAdmin = socketIOClient(ENDPOINT_ADMIN);
 
-const submitForm = (e, value, clearInput) => {
+const submitForm = (e, value, clearInput, emailClient) => {
   const ENDPOINT_CLIENT = 'http://localhost:5000/';
   const socketClient = socketIOClient(ENDPOINT_CLIENT);
 
@@ -13,7 +13,7 @@ const submitForm = (e, value, clearInput) => {
   console.log('pre emit');
   const userData = JSON.parse(localStorage.getItem('user'));
   // socket.emit('handshake', userData);
-  socketClient.emit('sentClientMessage', { message: value, userData });
+  socketClient.emit('sentClientMessage', { message: value, userData, emailClient });
   clearInput('');
 };
 
@@ -36,7 +36,7 @@ const MessageBox = ({ chat }) => (
   </div>
 );
 
-const FormList = () => {
+const FormList = ({ emailClient }) => {
   const [inputValue, setInputValue] = useState('');
   return (
     <form action="">
@@ -50,7 +50,7 @@ const FormList = () => {
       <div className="buttonContainer">
         <button
           type="submit"
-          onClick={(e) => submitForm(e, inputValue, setInputValue)}
+          onClick={(e) => submitForm(e, inputValue, setInputValue, emailClient)}
         >
           Send
         </button>
@@ -59,7 +59,7 @@ const FormList = () => {
   );
 };
 
-const AdminChat = () => {
+const AdminChat = ({ email = 'cliente@cliente.com' }) => {
   const [chatMessages, setMessages] = useState([]);
   // socket.on('receivedClientMessage', (message) => {
   //   console.log('msg front', message);
@@ -97,7 +97,7 @@ const AdminChat = () => {
       <div className="chatContainer">
         <MessageBox chat={chatMessages} />
         <div className="inputMessageContainer">
-          <FormList />
+          <FormList emailClient={email} />
         </div>
       </div>
     </div>

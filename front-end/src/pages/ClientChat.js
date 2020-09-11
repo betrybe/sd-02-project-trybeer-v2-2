@@ -81,7 +81,6 @@ const ClientChat = () => {
   useEffect(() => {
     socket.emit('connected', userData);
     socket.on('receivedClientMessage', (message) => {
-      console.log('msg front', message);
       setMessages((state) => [...state, message]);
     });
   }, []);

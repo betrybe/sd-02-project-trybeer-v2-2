@@ -52,21 +52,25 @@ const CHAT_PORT = process.env.CHAT_PORT || 5000;
 app.listen(NODE_PORT, () => console.log(`Listening on ${NODE_PORT}`));
 
 const clientsToAdmins = sockets.of('admin');
+let usersId = [];
 
 sockets.on('connection', async (socket) => {
-  let usersId = [];
   socket.on('connected', (userData) => {
     const { email } = userData;
-    usersId.push({ email, socket.id });
+    usersId.push({ email, id: socket.id });
+    console.log(usersId);
   });
 
   socket.on('sentClientMessage', async (data) => {
-    const { message, userData } = data;
-    console.log(socket.id);
-    console.log(Object.keys(sockets.sockets.sockets));
+    const { message, userData, emailClient } = data;
     // const controllerAnswer = await chatController.newOnlineUser(userData, socket.id);
     clientsToAdmins.emit('receivedClientMessage', `${userData.email}: ${message}`);
-    sockets.to(socket.id).emit('receivedClientMessage', `${userData.email}: ${message}`);
+    const clientId = usersId.find(({ email }) => email === emailClient || email === userData.email);
+    sockets.to(clientId.id).emit('receivedClientMessage', `${userData.email}: ${message}`);
+  });
+
+  socket.on('disconnect', () => {
+    usersId = usersId.filter(({ id }) => id !== socket.id);
   });
 
   // socket.on('message', async (msg) => {
