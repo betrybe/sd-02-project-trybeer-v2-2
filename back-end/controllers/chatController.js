@@ -1,14 +1,14 @@
-const rescue = require('express-rescue');
+const express = require('express');
+const http = require('http').createServer(express());
+const sockets = require('socket.io')(http);
 const ChatService = require('../services/ChatService');
 
-const newOnlineUser = rescue(async (req, res, next) => {
-  const {
-    id, name, email, role,
-  } = req.user;
-  const serviceAnswer = await ChatService.newOnlineUser(id, name, email, role);
+const newOnlineUser = async (userData, socketId) => {
+  const { email } = userData;
+  const serviceAnswer = await ChatService.newOnlineUser(email);
   if (serviceAnswer.error) return next(serviceAnswer);
   return res.status(200).json(serviceAnswer);
-});
+};
 
 // const registerMessage = async (userEmail, message) => chatRegistration
 //   .registerMessages(userEmail, message);

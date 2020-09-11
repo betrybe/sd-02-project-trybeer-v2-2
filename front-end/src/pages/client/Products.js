@@ -30,7 +30,6 @@ export default function ClientProducts() {
     };
     productsRequest();
   }, []);
-
   return (
     <div className="products-page">
       <div className="status-report-div">

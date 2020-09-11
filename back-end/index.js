@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -50,11 +51,24 @@ const CHAT_PORT = process.env.CHAT_PORT || 5000;
 
 app.listen(NODE_PORT, () => console.log(`Listening on ${NODE_PORT}`));
 
+const clientsToAdmins = sockets.of('admin');
+
 sockets.on('connection', async (socket) => {
-  // let handshake;
-  // socket.on('handshake', (data) => {
-  //   handshake = data;
-  // });
+  let usersId = [];
+  socket.on('connected', (userData) => {
+    const { email } = userData;
+    usersId.push({ email, socket.id });
+  });
+
+  socket.on('sentClientMessage', async (data) => {
+    const { message, userData } = data;
+    console.log(socket.id);
+    console.log(Object.keys(sockets.sockets.sockets));
+    // const controllerAnswer = await chatController.newOnlineUser(userData, socket.id);
+    clientsToAdmins.emit('receivedClientMessage', `${userData.email}: ${message}`);
+    sockets.to(socket.id).emit('receivedClientMessage', `${userData.email}: ${message}`);
+  });
+
   // socket.on('message', async (msg) => {
   //   sockets.to(socket.id).emit('message', `${msg}`);
   //   if (handshake && msg) chatController.registerMessage(handshake.email, msg);

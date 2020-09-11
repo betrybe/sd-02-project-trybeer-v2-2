@@ -1,22 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import socketIOClient from 'socket.io-client';
 import PropTypes from 'prop-types';
-import './Chat.css';
 
-const ENDPOINT = 'http://localhost:5000';
-const socket = socketIOClient(ENDPOINT);
+const ENDPOINT_ADMIN = 'http://localhost:5000/admin';
+const socketAdmin = socketIOClient(ENDPOINT_ADMIN);
 
 const submitForm = (e, value, clearInput) => {
+  const ENDPOINT_CLIENT = 'http://localhost:5000/';
+  const socketClient = socketIOClient(ENDPOINT_CLIENT);
+
   e.preventDefault();
+  console.log('pre emit');
   const userData = JSON.parse(localStorage.getItem('user'));
-  socket.emit('handshake', userData);
-  socket.emit('message', value);
+  // socket.emit('handshake', userData);
+  socketClient.emit('sentClientMessage', { message: value, userData });
   clearInput('');
 };
 
-const ListItem = ({ keyIndex, value }) => (
-  <li key={keyIndex}>{value}</li>
+const ListItem = ({ value }) => (
+  <li>{value}</li>
 );
 
 const MessageBox = ({ chat }) => (
@@ -25,8 +27,7 @@ const MessageBox = ({ chat }) => (
       {
         chat.map((message, index) => (
           <ListItem
-            key={message}
-            keyIndex={index}
+            key={`${message}-${index}`}
             value={message}
           />
         ))
@@ -58,34 +59,41 @@ const FormList = () => {
   );
 };
 
-const Chat = () => {
+const AdminChat = () => {
   const [chatMessages, setMessages] = useState([]);
+  // socket.on('receivedClientMessage', (message) => {
+  //   console.log('msg front', message);
+  //   setMessages((state) => [...state, message]);
+  // });
+  // useEffect(() => {
+  //   const { email, token } = JSON.parse(localStorage.getItem('user'));
+  //   const fetchMessages = async () => axios({
+  //     method: 'get',
+  //     url: `http://localhost:3001/messages/${email}`,
+  //     headers: { Authorization: token },
+  //   })
+  //     .then(({ data: newMessages }) => setMessages(newMessages));
+
+  //   socket.on('connect', (sentMessages) => {
+  //     fetchMessages(sentMessages);
+  //   });
+  // }, [chatMessages]);
 
   useEffect(() => {
-    const { email, token } = JSON.parse(localStorage.getItem('user'));
-    const fetchMessages = async () => axios({
-      method: 'get',
-      url: `http://localhost:3001/messages/${email}`,
-      headers: { Authorization: token },
-    })
-      .then(({ data: newMessages }) => setMessages(newMessages));
-      // .catch((err) => {
-      //   throw new Error(err.message, err.status);
-      // });
-
-    socket.on('connect', (sentMessages) => {
-      fetchMessages(sentMessages);
-    });
-  }, [chatMessages]);
-
-  useEffect(() => {
-    socket.on('message', (message) => {
+    socketAdmin.on('receivedClientMessage', (message) => {
       setMessages((state) => [...state, message]);
     });
   }, []);
 
+  // useEffect(() => {
+  //   socket.on('connect', (message) => {
+  //     setMessages((state) => [...state, message]);
+  //   });
+  // }, []);
+
   return (
     <div className="firstContainer">
+      Chat Admin
       <div className="chatContainer">
         <MessageBox chat={chatMessages} />
         <div className="inputMessageContainer">
@@ -96,10 +104,10 @@ const Chat = () => {
   );
 };
 
-export default Chat;
+export default AdminChat;
 
 ListItem.propTypes = {
-  keyIndex: PropTypes.number.isRequired,
+  // keyIndex: PropTypes.number.isRequired,
   value: PropTypes.string.isRequired,
 };
 
