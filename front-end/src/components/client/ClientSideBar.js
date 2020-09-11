@@ -12,14 +12,13 @@ const redirectButton = (setShowSideMenu, route) => {
   history.push(`${route}`);
 };
 
-const newChat = async (setShowSideMenu, route) => {
+const newChat = async () => {
   const token = checkLogin();
-  const connectInfo = await axios({
+  await axios({
     baseURL: 'http://localhost:3001/users/chat/connect',
     method: 'post',
     headers: { Accept: 'application/json', 'Content-Type': 'application/json', Authorization: token },
   });
-  console.log('front', connectInfo);
 };
 
 const SideBar = () => {
