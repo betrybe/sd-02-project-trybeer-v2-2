@@ -1,7 +1,5 @@
 import React from 'react';
-import {
-  Router, Switch, Route, BrowserRouter,
-} from 'react-router-dom';
+import { Switch, Route, BrowserRouter } from 'react-router-dom';
 import Login from './pages/Login';
 import AdminOrders from './pages/admin/Orders';
 import AdminOrdersDetails from './pages/admin/OrderDetails';
