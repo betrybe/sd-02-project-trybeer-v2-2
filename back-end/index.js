@@ -58,7 +58,6 @@ sockets.on('connection', async (socket) => {
   socket.on('connected', (userData) => {
     const { email } = userData;
     usersId.push({ email, id: socket.id });
-    console.log(usersId);
   });
 
   socket.on('sentClientMessage', async (data) => {

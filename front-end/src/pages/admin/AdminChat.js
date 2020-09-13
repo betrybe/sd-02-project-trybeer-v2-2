@@ -10,18 +10,17 @@ const submitForm = (e, value, clearInput, emailClient) => {
   const socketClient = socketIOClient(ENDPOINT_CLIENT);
 
   e.preventDefault();
-  console.log('pre emit');
   const userData = JSON.parse(localStorage.getItem('user'));
   // socket.emit('handshake', userData);
   socketClient.emit('sentClientMessage', { message: value, userData, emailClient });
   clearInput('');
 };
 
-const ListItem = ({ value }) => (
+export const ListItem = ({ value }) => (
   <li>{value}</li>
 );
 
-const MessageBox = ({ chat }) => (
+export const MessageBox = ({ chat }) => (
   <div className="messagesBox">
     <ul id="message">
       {
@@ -36,7 +35,7 @@ const MessageBox = ({ chat }) => (
   </div>
 );
 
-const FormList = ({ emailClient }) => {
+export const FormList = ({ emailClient }) => {
   const [inputValue, setInputValue] = useState('');
   return (
     <form action="">
@@ -61,23 +60,6 @@ const FormList = ({ emailClient }) => {
 
 const AdminChat = ({ email = 'cliente@cliente.com' }) => {
   const [chatMessages, setMessages] = useState([]);
-  // socket.on('receivedClientMessage', (message) => {
-  //   console.log('msg front', message);
-  //   setMessages((state) => [...state, message]);
-  // });
-  // useEffect(() => {
-  //   const { email, token } = JSON.parse(localStorage.getItem('user'));
-  //   const fetchMessages = async () => axios({
-  //     method: 'get',
-  //     url: `http://localhost:3001/messages/${email}`,
-  //     headers: { Authorization: token },
-  //   })
-  //     .then(({ data: newMessages }) => setMessages(newMessages));
-
-  //   socket.on('connect', (sentMessages) => {
-  //     fetchMessages(sentMessages);
-  //   });
-  // }, [chatMessages]);
 
   useEffect(() => {
     socketAdmin.on('receivedClientMessage', (message) => {
@@ -85,14 +67,9 @@ const AdminChat = ({ email = 'cliente@cliente.com' }) => {
     });
   }, []);
 
-  // useEffect(() => {
-  //   socket.on('connect', (message) => {
-  //     setMessages((state) => [...state, message]);
-  //   });
-  // }, []);
-
   return (
     <div className="firstContainer">
+
       Chat Admin
       <div className="chatContainer">
         <MessageBox chat={chatMessages} />
