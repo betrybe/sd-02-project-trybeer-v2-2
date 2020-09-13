@@ -24,9 +24,9 @@ export const MessageBox = ({ chat }) => (
   <div className="messagesBox">
     <ul id="message">
       {
-        chat.map((message, index) => (
+        chat.map((message) => (
           <ListItem
-            key={`${message}-${index}`}
+            key={`${message}${chat.length}`}
             value={message}
           />
         ))
@@ -90,4 +90,16 @@ ListItem.propTypes = {
 
 MessageBox.propTypes = {
   chat: PropTypes.instanceOf(Object).isRequired,
+};
+
+FormList.propTypes = {
+  emailClient: PropTypes.string.isRequired,
+};
+
+AdminChat.defaultProps = {
+  email: 'cliente@cliente.com',
+};
+
+AdminChat.propTypes = {
+  email: PropTypes.string,
 };

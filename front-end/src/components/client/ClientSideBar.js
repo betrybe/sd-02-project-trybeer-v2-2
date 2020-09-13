@@ -28,7 +28,7 @@ const LinkToProducts = ({ linkRoute, dataTest, text }) => {
 };
 
 const SideBar = () => {
-  const { sideMenu: [showSideMenu, _] } = useContext(TrybeerContext);
+  const { sideMenu: [showSideMenu] } = useContext(TrybeerContext);
   return (!showSideMenu) || (
     <div className="side-menu-container">
       <div className="side-menu-top-container">

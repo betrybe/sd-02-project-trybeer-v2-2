@@ -1,9 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import history from '../../services/history';
 import '../../styles/AdminSideBar.css';
-
-const redirectPage = (route) => history.push(route);
 
 const sideBarButtons = (text, dataTestId, route) => (
   <Link to={route}>

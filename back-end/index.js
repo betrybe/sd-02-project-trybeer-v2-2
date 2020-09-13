@@ -62,7 +62,7 @@ sockets.on('connection', async (socket) => {
 
   socket.on('sentClientMessage', async (data) => {
     const { message, userData, emailClient } = data;
-    // const controllerAnswer = await chatController.newOnlineUser(userData, socket.id);
+    await chatController.clientAdminMessage(message, userData);
     clientsToAdmins.emit('receivedClientMessage', `${userData.email}: ${message}`);
     const clientId = usersId.find(({ email }) => email === emailClient || email === userData.email);
     sockets.to(clientId.id).emit('receivedClientMessage', `${userData.email}: ${message}`);
