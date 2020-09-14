@@ -15,7 +15,7 @@ const registerMessages = async (message, email) => {
     email,
     messages: [
       {
-        email,
+        chatName: email,
         sentMessage: message,
         time: messageTime(),
       },
@@ -32,15 +32,16 @@ const emailSchemaExist = async (email) => {
 const updateEmailMessage = async (email, message) => {
   const db = await connection();
   await db.collection('messages').updateOne(
-    { email }, { $push: { messages: { email, sentMessage: message, time: messageTime() } } },
+    { email },
+    { $push: { messages: { chatName: email, sentMessage: message, time: messageTime() } } },
   );
 };
 
-const updateAdminMessage = async (message, email, emailClient) => {
+const updateAdminMessage = async (message, emailClient) => {
   const db = await connection();
   await db.collection('messages').updateOne(
     { email: emailClient },
-    { $push: { messages: { email, sentMessage: message, time: messageTime() } } },
+    { $push: { messages: { chatName: 'Loja', sentMessage: message, time: messageTime() } } },
   );
 };
 

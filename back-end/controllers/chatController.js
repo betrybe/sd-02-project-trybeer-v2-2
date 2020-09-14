@@ -8,8 +8,8 @@ const clientAdminMessage = rescue(async (req, res) => {
 });
 
 const adminClientMessage = rescue(async (req, res) => {
-  const { message, userData: { email }, emailClient } = req.body;
-  await ChatService.adminClientMessage(message, email, emailClient);
+  const { message, emailClient } = req.body;
+  await ChatService.adminClientMessage(message, emailClient);
   return res.status(200).end();
 });
 

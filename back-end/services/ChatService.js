@@ -14,8 +14,8 @@ const clientAdminMessage = async (message, email) => {
   });
 };
 
-const adminClientMessage = async (message, email, emailClient) => ChatModel
-  .updateAdminMessage(message, email, emailClient).catch(() => {
+const adminClientMessage = async (message, emailClient) => ChatModel
+  .updateAdminMessage(message, emailClient).catch(() => {
     throw errorMsgNotSaved;
   });
 

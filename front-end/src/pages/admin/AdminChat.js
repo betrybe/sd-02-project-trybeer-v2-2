@@ -22,7 +22,7 @@ const adminSubmitForm = async (e, value, clearInput, emailClient) => {
       'Content-Type': 'application/json',
       Authorization: token,
     },
-    data: { message: value, userData, emailClient },
+    data: { message: value, emailClient },
   });
   console.log(requestAnswer);
   socketClient.emit('sentClientMessage', { message: value, userData, emailClient });
