@@ -26,7 +26,8 @@ app.use(bodyParser.json());
 
 app.post('/users', userController.createUser);
 app.patch('/users/me', validateJWT, userController.updateUserById);
-app.post('/users/chat/connect', validateJWT, chatController.newOnlineUser);
+app.post('/users/chat', validateJWT, chatController.clientAdminMessage);
+app.post('/users/admin/chat', validateJWT, chatController.adminClientMessage);
 
 app.get('/login', validateJWT, userController.getLoginUser);
 app.post('/login', userController.loginUser);
@@ -57,12 +58,15 @@ let usersId = [];
 sockets.on('connection', async (socket) => {
   socket.on('connected', (userData) => {
     const { email } = userData;
-    usersId.push({ email, id: socket.id });
+    const existUser = usersId.some((user) => user.email === email);
+    if (!existUser) {
+      usersId.push({ email, id: socket.id });
+    }
+    console.log(usersId);
   });
 
   socket.on('sentClientMessage', async (data) => {
     const { message, userData, emailClient } = data;
-    await chatController.clientAdminMessage(message, userData);
     clientsToAdmins.emit('receivedClientMessage', `${userData.email}: ${message}`);
     const clientId = usersId.find(({ email }) => email === emailClient || email === userData.email);
     sockets.to(clientId.id).emit('receivedClientMessage', `${userData.email}: ${message}`);
