@@ -117,7 +117,7 @@ export const propCard = {
   product: PropTypes.shape({
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
-    price: PropTypes.number.isRequired,
+    price: PropTypes.string.isRequired,
     urlImage: PropTypes.string.isRequired,
   }).isRequired,
 };
