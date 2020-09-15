@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import history from '../services/history';
-
+import { withRouter } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import '../styles/RegisterPage.css';
 
 const MAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -33,13 +33,13 @@ const addLocalStorage = ({
   }));
 };
 
-const registerRedirect = (role) => (
+const registerRedirect = (role, history) => (
   role === 'client'
     ? history.push('/products')
     : history.push('/admin/orders')
 );
 
-const sendLoginRequest = async (email, password, setErrorMessage) => {
+const sendLoginRequest = async (email, password, setErrorMessage, history) => {
   const loginData = await axios({
     baseURL: 'http://localhost:3001/login',
     method: 'post',
@@ -54,17 +54,12 @@ const sendLoginRequest = async (email, password, setErrorMessage) => {
 
   return loginData.data.error
     ? setErrorMessage(`Error: ${loginData.status}. ${loginData.data.error.message}`)
-    : registerRedirect(loginData.data.role);
-
-  /*  .catch(({ response: { data: { error } } }) => setErrorMessage(error));
-  if (loginData) addLocalStorage(loginData.data);
-
-  return loginData ? registerRedirect(loginData.data.role) : null; */
+    : registerRedirect(loginData.data.role, history);
 };
 
 const requestRegister = async ({
   nameData, emailData, passData, sellerData,
-}, setSuccessOrError) => {
+}, setSuccessOrError, history) => {
   const role = (sellerData) ? 'true' : 'false';
   const resp = await axios.post('http://localhost:3001/users',
     {
@@ -73,7 +68,7 @@ const requestRegister = async ({
     .catch(({ response }) => response);
 
   if (!resp) return setSuccessOrError({ message: 'Falha de conexão' });
-  if (!resp.data.error) return sendLoginRequest(emailData, passData, setSuccessOrError);
+  if (!resp.data.error) return sendLoginRequest(emailData, passData, setSuccessOrError, history);
   return setSuccessOrError({ message: resp.data.error.message });
 };
 
@@ -99,7 +94,7 @@ const clearFields = (setInputsData) => {
   });
 };
 
-const handleSubmit = async (event, inputsData, setInputsData, setSuccessOrError) => {
+const handleSubmit = async (event, inputsData, setInputsData, setSuccessOrError, history) => {
   const isValid = verifyValues(inputsData);
   if (isValid.error === 'name') {
     alert('O nome deve possuir 12 caracteres e sem caracteres especiais');
@@ -117,12 +112,12 @@ const handleSubmit = async (event, inputsData, setInputsData, setSuccessOrError)
     return event.preventDefault();
   }
   clearFields(setInputsData);
-  requestRegister(inputsData, setSuccessOrError);
+  requestRegister(inputsData, setSuccessOrError, history);
   event.preventDefault();
   return null;
 };
 
-const RegisterPage = () => {
+const RegisterPage = ({ history }) => {
   const [successOrError, setSuccessOrError] = useState('');
   const [inputsData, setInputsData] = useState({
     emailData: '',
@@ -138,7 +133,7 @@ const RegisterPage = () => {
       {(successOrError === '') || <h2>{`Error: ${successOrError.message}`}</h2>}
       <form
         className="register-form-container"
-        onSubmit={(e) => handleSubmit(e, inputsData, setInputsData, setSuccessOrError)}
+        onSubmit={(e) => handleSubmit(e, inputsData, setInputsData, setSuccessOrError, history)}
       >
         {textAndCheckboxInputs('text', 'Nome', inputsData, setInputsData, 'signup-name', 'nameData')}
         {textAndCheckboxInputs('text', 'Email', inputsData, setInputsData, 'signup-email', 'emailData')}
@@ -152,4 +147,8 @@ const RegisterPage = () => {
   );
 };
 
-export default RegisterPage;
+export default withRouter(RegisterPage);
+
+RegisterPage.propTypes = {
+  history: PropTypes.instanceOf(Object).isRequired,
+};

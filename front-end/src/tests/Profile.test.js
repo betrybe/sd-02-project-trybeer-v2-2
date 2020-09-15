@@ -1,9 +1,13 @@
 import React from 'react';
-import { render, fireEvent, wait } from '@testing-library/react';
+import { fireEvent, wait } from '@testing-library/react';
 import axios from 'axios';
-import history from '../services/history';
+import { createMemoryHistory } from 'history'
 import Provider from '../context/TrybeerContext';
 import Profile from '../pages/client/Profile';
+import renderWithRouter from '../services/renderWithRouter';
+
+const history = createMemoryHistory();
+
 
 const usersMock = {
   email: 'jctaraujo@hotmail.com',
@@ -43,7 +47,7 @@ describe('Testando funcionamento da pagina de profile', () => {
   test('Testing if Fetch API is working', async () => {
     localStorage.setItem('user', JSON.stringify(usersMock));
     history.push('/profile');
-    const { queryByTestId } = render(
+    const { queryByTestId } = renderWithRouter(
       <Provider>
         <Profile />
       </Provider>,
@@ -71,7 +75,7 @@ describe('Testando funcionamento da pagina de profile', () => {
   it('fetches erroneously data from an API', async () => {
     localStorage.setItem('user', JSON.stringify(usersMock));
     history.push('/profile');
-    const { queryByTestId } = render(
+    const { queryByTestId } = renderWithRouter(
       <Profile />,
     );
     expect(queryByTestId('profile-save-btn')).toBeInTheDocument();
@@ -97,7 +101,7 @@ describe('Testando funcionamento da pagina de profile', () => {
   test('if user is logged', () => {
     localStorage.setItem('user', JSON.stringify(usersMockWithoutToken));
     history.push('/profile');
-    const { queryByTestId } = render(
+    const { queryByTestId } = renderWithRouter(
       <Provider>
         <Profile />
       </Provider>,

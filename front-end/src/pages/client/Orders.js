@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
+import { withRouter } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import axios from 'axios';
-import history from '../../services/history';
 import OrdersCard from '../../components/OrdersCard';
 
-const sendRequestOrders = async (setErrorStatus) => {
-  const { token } = JSON.parse(localStorage.getItem('user'));
-  if (!token) {
-    history.push('/login');
+const sendRequestOrders = async (setErrorStatus, history) => {
+  const userData = JSON.parse(localStorage.getItem('user'));
+  if (!userData || !userData.token) {
+    return history.push('/login');
   }
+
+  const { token } = userData;
   const resp = await axios({
     baseURL: 'http://localhost:3001/sales',
     method: 'get',
@@ -26,17 +29,18 @@ const sendRequestOrders = async (setErrorStatus) => {
   return resp;
 };
 
-const Orders = () => {
+const Orders = ({ history }) => {
   const [error, setErrorStatus] = useState(null);
   const [data, setData] = useState(null);
+
   useEffect(() => {
     const isLSExist = JSON.parse(localStorage.getItem('user'));
     if (!isLSExist || !isLSExist.token) history.push('/login');
     const fetchOrders = async () => {
-      setData(await sendRequestOrders(setErrorStatus));
+      setData(await sendRequestOrders(setErrorStatus, history));
     };
     fetchOrders();
-  }, [setErrorStatus, setData]);
+  }, [setErrorStatus, setData, history]);
 
   if (!data) return <div>Loading...</div>;
 
@@ -54,4 +58,8 @@ const Orders = () => {
   );
 };
 
-export default Orders;
+export default withRouter(Orders);
+
+Orders.propTypes = {
+  history: PropTypes.instanceOf(Object).isRequired,
+};

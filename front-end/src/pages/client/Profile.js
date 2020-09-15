@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import history from '../../services/history';
+import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import '../../styles/Profile.css';
 
 const verifyLocalStorage = () => JSON.parse(localStorage.getItem('user'));
@@ -49,7 +50,7 @@ const saveBtn = (disabled, user, setError) => (
   </button>
 );
 
-const Profile = () => {
+const Profile = ({ history }) => {
   const [user, setUser] = useState('');
   const [initialUser, setInitialUser] = useState('');
   const [error, setError] = useState('');
@@ -59,7 +60,7 @@ const Profile = () => {
     if (!isLSExist || !isLSExist.token) history.push('/login');
     setUser(isLSExist);
     setInitialUser(isLSExist);
-  }, [setUser]);
+  }, [setUser, history]);
   if (error.match(/expired/i)) history.push('/login');
   return (
     <div className="profile-container">
@@ -75,4 +76,10 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default withRouter(Profile);
+
+Profile.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+};

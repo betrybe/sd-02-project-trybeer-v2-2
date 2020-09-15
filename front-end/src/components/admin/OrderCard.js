@@ -5,7 +5,8 @@ import PropTypes from 'prop-types';
 import formatPriceFunc from '../../services/formatPriceFunc';
 
 export const getStatusColor = (status) => {
-  if (status === 'Pendente') return { color: 'yellow' };
+  if (status === 'Pendente') return { color: 'red' };
+  if (status === 'Preparando') return { color: 'yellow' };
   if (status === 'Entregue') return { color: 'green' };
   return console.error('Status desconhecido.');
 };

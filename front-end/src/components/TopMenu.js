@@ -32,13 +32,16 @@ export default function TopMenu() {
   useEffect(() => {
     setDisplayTopMenu(true);
     if (pathname) {
-      const dontDisplay = ['/register', '/login', '/admin/profile', '/admin/orders'];
-      if (dontDisplay.find((path) => pathname.match(new RegExp(path, 'g')))) return setDisplayTopMenu(false);
+      const dontDisplay = ['/', '/register', '/login', '/admin'];
+      if (dontDisplay.find((path) => pathname === path)) {
+        setDisplayTopMenu(false);
+        setHeaderTitle('hidden');
+      }
 
       if (pathname === '/profile') setHeaderTitle('Meu perfil');
       else if (pathname === '/checkout') setHeaderTitle('Finalizar Pedido');
       else if (pathname === '/orders') setHeaderTitle('Meus Pedidos');
-      else if (pathname.match(/orders\/[0-9]+/g)) setHeaderTitle('Detalhes de Pedido');
+      else if (pathname.match(/^orders\/[0-9]+$/g)) setHeaderTitle('Detalhes de Pedido');
       else setHeaderTitle('TryBeer');
     }
     return (() => {});

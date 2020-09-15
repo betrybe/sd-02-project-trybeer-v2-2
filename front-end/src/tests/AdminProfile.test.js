@@ -1,9 +1,12 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { render, fireEvent, cleanup } from '@testing-library/react';
-import history from '../services/history';
+import { fireEvent, cleanup } from '@testing-library/react';
+import { createMemoryHistory } from 'history'
 import Profile from '../pages/admin/Profile';
 import Provider from '../context/TrybeerContext';
+import renderWithRouter from '../services/renderWithRouter';
+
+const history = createMemoryHistory();
 
 const administratorUser = {
   name: 'Felipe Andrade',
@@ -21,7 +24,7 @@ beforeEach(() => {
 describe('Tests for Admin Profile', () => {
   test('Verify HTML elements appears on page', () => {
     localStorage.setItem('user', JSON.stringify(administratorUser));
-    const { queryByTestId } = render(
+    const { queryByTestId } = renderWithRouter(
       <Provider>
         <Profile />
       </Provider>,
@@ -51,7 +54,7 @@ describe('Tests for Admin Profile', () => {
 
   test('Verify lateral side bar funcionatily buttons', () => {
     localStorage.setItem('user', JSON.stringify(administratorUser));
-    const { queryByTestId } = render(
+    const { queryByTestId } = renderWithRouter(
       <Profile />,
     );
 
@@ -68,7 +71,7 @@ describe('Tests for Admin Profile', () => {
   });
 
   test('Verify useEffect redirect', () => {
-    const { queryByTestId } = render(<Profile />);
+    const { queryByTestId } = renderWithRouter(<Profile />);
 
     const ordersLink = queryByTestId('side-menu-item-orders');
     expect(ordersLink).not.toBeInTheDocument();

@@ -1,7 +1,10 @@
 import React from 'react';
-import { render } from '@testing-library/react';
 import ProductCard from '../components/ProductCard';
 import Provider from '../context/TrybeerContext';
+import { createMemoryHistory } from 'history'
+import renderWithRouter from '../services/renderWithRouter';
+
+const history = createMemoryHistory();
 
 const index = 0;
 
@@ -14,7 +17,7 @@ const product = {
 
 describe('test product card component', () => {
   test('if product card component is rendering correctly', () => {
-    const { queryByTestId } = render(
+    const { queryByTestId } = renderWithRouter(
       <Provider>
         <ProductCard product={product} index={index} />
       </Provider>,

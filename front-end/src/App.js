@@ -5,7 +5,6 @@ import AdminOrders from './pages/admin/Orders';
 import AdminOrdersDetails from './pages/admin/OrderDetails';
 import AdminProfile from './pages/admin/Profile';
 import ClientProducts from './pages/client/Products';
-import history from './services/history';
 import Checkout from './pages/client/Checkout';
 import TopMenu from './components/TopMenu';
 import ClientSideBar from './components/client/ClientSideBar';
@@ -34,9 +33,9 @@ function App() {
           <Route exact path="/orders/:orderId" component={OrdersDetails} />
           <Route exact path="/profile" component={Profile} />
           <Route exact path="/checkout" component={Checkout} />
-          <Route exact path="/clientChat" component={ClientChat} />
-          <Route exact path="/adminChat" component={AdminChat} />
-          <Route exact path="/" render={() => history.push('/login')} />
+          <Route exact path="/chat" component={ClientChat} />
+          <Route exact path="/admin/chat" component={AdminChat} />
+          <Route exact path="/" component={Login} />
         </Switch>
       </BrowserRouter>
     </div>

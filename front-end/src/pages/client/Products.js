@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import history from '../../services/history';
+import { withRouter } from 'react-router-dom';
 import ProductCard from '../../components/ProductCard';
 import CheckoutButton from '../../components/CheckoutButton';
 import '../../styles/Products.css';
 
-export default function ClientProducts() {
+export default withRouter(function ClientProducts({ history }) {
   const [productData, setProductData] = useState([]);
   const [errorStatus, setErrorStatus] = useState('');
 
@@ -29,7 +29,8 @@ export default function ClientProducts() {
       return null;
     };
     productsRequest();
-  }, []);
+  }, [history]);
+
   return (
     <div className="products-page">
       <div className="status-report-div">
@@ -44,4 +45,4 @@ export default function ClientProducts() {
       </div>
     </div>
   );
-}
+});

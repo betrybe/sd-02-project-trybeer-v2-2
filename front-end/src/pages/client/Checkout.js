@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { withRouter } from 'react-router-dom';
 import useRefreshTotalPrice from '../../hooks/useRefreshTotalPrice';
-import history from '../../services/history';
 import '../../styles/Checkout.css';
 
 const formatPrice = (totalPrice) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(totalPrice);
@@ -20,7 +20,7 @@ const interactiveFormField = (formName, label, type, formValidation) => (
   </label>
 );
 
-const statusHandler = ({ status, message }, setSalesStatus) => {
+const statusHandler = ({ status, message }, setSalesStatus, history) => {
   const divStyleError = {
     fontSize: 'smaller',
     display: 'inline-block',
@@ -69,7 +69,7 @@ const statusHandler = ({ status, message }, setSalesStatus) => {
   );
 };
 
-const sendProducts = async (deliveryAddress, deliveryNumber, setSalesStatus) => {
+const sendProducts = async (deliveryAddress, deliveryNumber, setSalesStatus, history) => {
   const productsData = JSON.parse(localStorage.getItem('cart')).map(({ id: productId, itemQty: quantity }) => ({ productId, quantity }));
 
   const salesObject = { products: productsData, deliveryAddress, deliveryNumber };
@@ -86,10 +86,10 @@ const sendProducts = async (deliveryAddress, deliveryNumber, setSalesStatus) => 
   })
     .catch(({ response: { status, data: { error: { message } } } }) => {
       error = 1;
-      return statusHandler({ status, message }, setSalesStatus);
+      return statusHandler({ status, message }, setSalesStatus, history);
     });
 
-  if (error !== 1) return statusHandler(salesRequest, setSalesStatus);
+  if (error !== 1) return statusHandler(salesRequest, setSalesStatus, history);
   return null;
 };
 
@@ -116,6 +116,7 @@ const renderFormElements = ([
   salesStatus,
   setSalesStatus,
   totalPrice,
+  history,
 ]) => (
   <div className="address-form-container">
     <div className="address-header-container">
@@ -129,7 +130,7 @@ const renderFormElements = ([
         type="button"
         data-testid="checkout-finish-btn"
         className="checkout-finish-btn"
-        onClick={() => sendProducts(addressValue, streetNumber, setSalesStatus)}
+        onClick={() => sendProducts(addressValue, streetNumber, setSalesStatus, history)}
         disabled={!(addressValue && streetNumber && totalPrice)}
       >
         Finalizar Pedido
@@ -165,7 +166,7 @@ const renderProductsList = (cartData, setCartData, totalPrice) => (
   </div>
 );
 
-export default function Checkout() {
+export default withRouter(function Checkout({ history }) {
   const [cartData, setCartData] = useState([]);
   const [addressValue, setAdressValue] = useState('');
   const [streetNumber, setStreetNumber] = useState(0);
@@ -184,7 +185,7 @@ export default function Checkout() {
     }
     setCartData(getAddressInfoFromLocalStorage());
     return (() => {});
-  }, [setCartData]);
+  }, [setCartData, history]);
 
   return (
     <div className="checkout-page-container">
@@ -197,7 +198,8 @@ export default function Checkout() {
         salesStatus,
         setSalesStatus,
         totalPrice,
+        history,
       ])}
     </div>
   );
-}
+});

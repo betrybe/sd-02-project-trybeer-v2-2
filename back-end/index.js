@@ -62,7 +62,6 @@ sockets.on('connection', async (socket) => {
     if (!existUser) {
       usersId.push({ email, id: socket.id });
     }
-    console.log(usersId);
   });
 
   socket.on('sentClientMessage', async (data) => {
@@ -76,10 +75,9 @@ sockets.on('connection', async (socket) => {
     usersId = usersId.filter(({ id }) => id !== socket.id);
   });
 
-  // socket.on('message', async (msg) => {
-  //   sockets.to(socket.id).emit('message', `${msg}`);
-  //   if (handshake && msg) chatController.registerMessage(handshake.email, msg);
-  // });
+  socket.on('statusUpdate', ({ status, saleId }) => {
+    sockets.emit(`${saleId}`, status);
+  });
 });
 
 http.listen(CHAT_PORT, () => console.log(`Chat Listening on ${CHAT_PORT}`));
