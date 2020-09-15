@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import socketIOClient from 'socket.io-client';
 import axios from 'axios';
 import PropTypes from 'prop-types';
@@ -25,7 +25,7 @@ const clientPostMessage = async (value) => axios({
 const submitClientForm = async (e, value, clearInput) => {
   e.preventDefault();
   await clientPostMessage(value);
-  socket.emit('sentClientMessage', { message: value, userData });
+  socket.emit('receivedMsg', { message: value, userData });
   clearInput('');
 };
 
@@ -53,14 +53,11 @@ const ClientFormList = () => {
 };
 
 const ClientChat = () => {
-  const [chatMessages, setMessages] = useState([]);
+  const [chatMessages, setChatMessages] = useState([]);
 
-  useEffect(() => {
-    socket.emit('connected', userData);
-    socket.on('receivedClientMessage', (message) => {
-      setMessages((state) => [...state, message]);
-    });
-  }, []);
+  socket.on(`${userData.email}client`, (message) => {
+    setChatMessages([...chatMessages, message]);
+  });
 
   return (
     <div className="firstContainer">

@@ -1,14 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import socketIOClient from 'socket.io-client';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import checkLogin from '../../services/checkLogin';
 import AdminSideBar from '../../components/admin/AdminSideBar';
 
-const ENDPOINT_ADMIN = 'http://localhost:5000/admin';
 const ENDPOINT_CLIENT = 'http://localhost:5000/';
-const socketAdmin = socketIOClient(ENDPOINT_ADMIN);
-const socketClient = socketIOClient(ENDPOINT_CLIENT);
+const socket = socketIOClient(ENDPOINT_CLIENT);
 const userData = JSON.parse(localStorage.getItem('user'));
 const token = checkLogin();
 const keyStamp = () => Date.now();
@@ -25,7 +23,7 @@ const adminSubmitForm = async (e, value, clearInput, emailClient) => {
     },
     data: { message: value, emailClient },
   });
-  socketClient.emit('sentClientMessage', { message: value, userData, emailClient });
+  socket.emit('receivedMsg', { message: value, userData, emailClient });
   clearInput('');
 };
 
@@ -71,14 +69,12 @@ export const FormList = ({ emailClient }) => {
   );
 };
 
-const AdminChat = ({ email = 'cliente@cliente.com' }) => {
-  const [chatMessages, setMessages] = useState([]);
+const AdminChat = ({ location: { state: { email } } }) => {
+  const [chatMessages, setChatMessages] = useState([]);
 
-  useEffect(() => {
-    socketAdmin.on('receivedClientMessage', (message) => {
-      setMessages((state) => [...state, message]);
-    });
-  }, []);
+  socket.on(`${email}client`, (message) => {
+    setChatMessages([...chatMessages, message]);
+  });
 
   return (
     <div className="firstContainer">
@@ -108,10 +104,7 @@ FormList.propTypes = {
   emailClient: PropTypes.string.isRequired,
 };
 
-AdminChat.defaultProps = {
-  email: 'cliente@cliente.com',
-};
-
 AdminChat.propTypes = {
-  email: PropTypes.string,
+  location: PropTypes.instanceOf(Object).isRequired,
+  state: PropTypes.instanceOf(Object).isRequired,
 };

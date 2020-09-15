@@ -15,6 +15,7 @@ import OrdersDetails from './pages/client/OrderDetails';
 import Profile from './pages/client/Profile';
 import ClientChat from './pages/ClientChat';
 import AllChatsAdmin from './pages/admin/AllChatsAdmin';
+import AdminChat from './pages/admin/AdminChat';
 import './App.css';
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
           <Route exact path="/admin/orders" component={AdminOrders} />
           <Route exact path="/admin/orders/:id" component={AdminOrdersDetails} />
           <Route exact path="/admin/profile" component={AdminProfile} />
+          <Route exact path="/admin/chats" component={AllChatsAdmin} />
           <Route exact path="/products" component={ClientProducts} />
           <Route exact path="/login" component={Login} />
           <Route exact path="/register" component={RegisterPage} />
@@ -35,7 +37,7 @@ function App() {
           <Route exact path="/profile" component={Profile} />
           <Route exact path="/checkout" component={Checkout} />
           <Route exact path="/clientChat" component={ClientChat} />
-          <Route exact path="/adminChat" component={AllChatsAdmin} />
+          <Route exact path="/adminChat" component={AdminChat} />
           <Route exact path="/" render={() => history.push('/login')} />
         </Switch>
       </BrowserRouter>

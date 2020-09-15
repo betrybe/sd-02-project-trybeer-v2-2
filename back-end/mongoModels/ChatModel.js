@@ -57,11 +57,8 @@ const getAllChats = async () => {
     .aggregate([
       { $unwind: '$messages' },
       { $sort: { 'messages.time': 1 } },
-      {
-        $group: {
-          _id: null,
-        },
-      },
+      { $group: { _id: '$email', messages: { $push: '$messages' } } },
+      { $project: { _id: 0, messages: 1, email: '$_id' } },
     ]).toArray();
   return modelAnswer;
 };

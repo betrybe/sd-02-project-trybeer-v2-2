@@ -53,34 +53,11 @@ const CHAT_PORT = process.env.CHAT_PORT || 5000;
 
 app.listen(NODE_PORT, () => console.log(`Listening on ${NODE_PORT}`));
 
-const clientsToAdmins = sockets.of('admin');
-let usersId = [];
-
 sockets.on('connection', async (socket) => {
-  socket.on('connected', (userData) => {
-    const { email } = userData;
-    const existUser = usersId.some((user) => user.email === email);
-    if (!existUser) {
-      usersId.push({ email, id: socket.id });
-    }
-    console.log(usersId);
-  });
-
-  socket.on('sentClientMessage', async (data) => {
+  socket.on('receivedMsg', async (data) => {
     const { message, userData, emailClient } = data;
-    clientsToAdmins.emit('receivedClientMessage', `${userData.email}: ${message}`);
-    const clientId = usersId.find(({ email }) => email === emailClient || email === userData.email);
-    sockets.to(clientId.id).emit('receivedClientMessage', `${userData.email}: ${message}`);
+    sockets.emit(`${emailClient || userData.email}client`, `${userData.email}: ${message}`);
   });
-
-  socket.on('disconnect', () => {
-    usersId = usersId.filter(({ id }) => id !== socket.id);
-  });
-
-  // socket.on('message', async (msg) => {
-  //   sockets.to(socket.id).emit('message', `${msg}`);
-  //   if (handshake && msg) chatController.registerMessage(handshake.email, msg);
-  // });
 });
 
 http.listen(CHAT_PORT, () => console.log(`Chat Listening on ${CHAT_PORT}`));
