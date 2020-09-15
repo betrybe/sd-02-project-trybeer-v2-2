@@ -27,6 +27,7 @@ app.use(bodyParser.json());
 app.post('/users', userController.createUser);
 app.patch('/users/me', validateJWT, userController.updateUserById);
 app.post('/users/chat', validateJWT, chatController.clientAdminMessage);
+app.get('/users/chat', validateJWT, chatController.getAllChats);
 app.post('/users/admin/chat', validateJWT, chatController.adminClientMessage);
 
 app.get('/login', validateJWT, userController.getLoginUser);

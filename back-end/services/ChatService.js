@@ -19,7 +19,16 @@ const adminClientMessage = async (message, emailClient) => ChatModel
     throw errorMsgNotSaved;
   });
 
+const getAllChats = async () => {
+  const modelAnswer = await ChatModel.getAllChats().catch(() => {
+    const error = { error: true, message: 'Messages not found', code: 'not_found' };
+    throw error;
+  });
+  return modelAnswer;
+};
+
 module.exports = {
   clientAdminMessage,
   adminClientMessage,
+  getAllChats,
 };

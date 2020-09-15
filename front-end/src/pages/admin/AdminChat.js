@@ -3,6 +3,7 @@ import socketIOClient from 'socket.io-client';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import checkLogin from '../../services/checkLogin';
+import AdminSideBar from '../../components/admin/AdminSideBar';
 
 const ENDPOINT_ADMIN = 'http://localhost:5000/admin';
 const ENDPOINT_CLIENT = 'http://localhost:5000/';
@@ -14,7 +15,7 @@ const keyStamp = () => Date.now();
 
 const adminSubmitForm = async (e, value, clearInput, emailClient) => {
   e.preventDefault();
-  const requestAnswer = await axios({
+  await axios({
     baseURL: 'http://localhost:3001/users/admin/chat',
     method: 'post',
     headers: {
@@ -24,7 +25,6 @@ const adminSubmitForm = async (e, value, clearInput, emailClient) => {
     },
     data: { message: value, emailClient },
   });
-  console.log(requestAnswer);
   socketClient.emit('sentClientMessage', { message: value, userData, emailClient });
   clearInput('');
 };
@@ -82,8 +82,7 @@ const AdminChat = ({ email = 'cliente@cliente.com' }) => {
 
   return (
     <div className="firstContainer">
-
-      Chat Admin
+      <AdminSideBar />
       <div className="chatContainer">
         <MessageBox chat={chatMessages} />
         <div className="inputMessageContainer">

@@ -64,7 +64,6 @@ const ClientChat = () => {
 
   return (
     <div className="firstContainer">
-      ChatClient
       <div className="chatContainer">
         <MessageBox chat={chatMessages} />
         <div className="inputMessageContainer">

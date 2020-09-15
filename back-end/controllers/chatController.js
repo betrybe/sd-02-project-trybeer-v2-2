@@ -13,18 +13,13 @@ const adminClientMessage = rescue(async (req, res) => {
   return res.status(200).end();
 });
 
-// const registerMessage = async (userEmail, message) => chatRegistration
-//   .registerMessages(userEmail, message);
-
-// const getMessages = rescue(async (req, res) => {
-//   const { email } = req.user;
-//   const messages = await chatRegistration.getMessages(email);
-//   return res.status(200).send(messages);
-// });
+const getAllChats = rescue(async (_req, res) => {
+  const serviceAnswer = await ChatService.getAllChats();
+  res.status(200).json(serviceAnswer);
+});
 
 module.exports = {
   clientAdminMessage,
   adminClientMessage,
-  // registerMessage,
-  // getMessages,
+  getAllChats,
 };

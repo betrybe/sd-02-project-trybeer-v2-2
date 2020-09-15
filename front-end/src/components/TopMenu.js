@@ -32,7 +32,7 @@ export default function TopMenu() {
   useEffect(() => {
     setDisplayTopMenu(true);
     if (pathname) {
-      const dontDisplay = ['/register', '/login', '/admin/profile', '/admin/orders'];
+      const dontDisplay = ['/register', '/login', '/admin/profile', '/admin/orders', '/adminChat'];
       if (dontDisplay.find((path) => pathname.match(new RegExp(path, 'g')))) return setDisplayTopMenu(false);
 
       if (pathname === '/profile') setHeaderTitle('Meu perfil');
