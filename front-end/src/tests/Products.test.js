@@ -1,9 +1,13 @@
 import React from 'react';
-import { render, fireEvent, wait } from '@testing-library/react';
+import { fireEvent, wait } from '@testing-library/react';
 import axios from 'axios';
-import history from '../services/history';
+import { createMemoryHistory } from 'history'
 import ClientProducts from '../pages/client/Products';
 import Provider from '../context/TrybeerContext';
+import renderWithRouter from '../services/renderWithRouter';
+
+const history = createMemoryHistory();
+
 
 const usersMock = {
   email: 'jctaraujo@hotmail.com',
@@ -61,7 +65,7 @@ describe('Products page tests', () => {
     localStorage.setItem('user', JSON.stringify(usersMock));
     history.push('/products');
     axios.mockResolvedValue(dataSuccess);
-    const { findByTestId } = render(
+    const { findByTestId } = renderWithRouter(
       <Provider>
         <ClientProducts />
       </Provider>,
@@ -74,7 +78,7 @@ describe('Products page tests', () => {
     // localStorage.setItem('user', JSON.stringify(usersMock));
     history.push('/products');
     axios.mockResolvedValue(dataSuccess);
-    const { findByTestId } = render(
+    const { findByTestId } = renderWithRouter(
       <Provider>
         <ClientProducts />
       </Provider>,
@@ -86,7 +90,7 @@ describe('Products page tests', () => {
     localStorage.setItem('user', JSON.stringify(usersMock));
     history.push('/products');
     axios.mockRejectedValue(dataError);
-    const { queryByText } = render(
+    const { queryByText } = renderWithRouter(
       <Provider>
         <ClientProducts />
       </Provider>,
@@ -99,7 +103,7 @@ describe('Products page tests', () => {
     localStorage.setItem('user', JSON.stringify(usersMock));
     history.push('/products');
     axios.mockResolvedValue(null);
-    const { queryByText } = render(
+    const { queryByText } = renderWithRouter(
       <Provider>
         <ClientProducts />
       </Provider>,

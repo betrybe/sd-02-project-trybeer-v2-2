@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, withRouter } from 'react-router-dom';
 import axios from 'axios';
-import history from '../services/history';
+
 import '../styles/Login.css';
 
 const MAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -10,7 +10,8 @@ const loginRedirect = ({
   data: {
     name, email, token, role,
   },
-}) => {
+}, history) => {
+  localStorage.removeItem('user');
   localStorage.setItem('user', JSON.stringify({
     name, email, token, role,
   }));
@@ -18,7 +19,7 @@ const loginRedirect = ({
   return history.push('/products');
 };
 
-const sendLoginRequest = async (email, password, setErrorMessage) => {
+const sendLoginRequest = async (email, password, setErrorMessage, history) => {
   const loginData = await axios({
     baseURL: 'http://localhost:3001/login',
     method: 'post',
@@ -34,7 +35,7 @@ const sendLoginRequest = async (email, password, setErrorMessage) => {
 
   return loginData.data.error
     ? setErrorMessage(`Error: ${loginData.status}. ${loginData.data.error.message}`)
-    : loginRedirect(loginData);
+    : loginRedirect(loginData, history);
 };
 
 const renderPage = (interactiveFormField, formValidation, [
@@ -45,6 +46,7 @@ const renderPage = (interactiveFormField, formValidation, [
   setShouldRegister,
   errorMessage,
   setErrorMessage,
+  history,
 ]) => (
   <div className="login-page">
     <div className="error-div">{errorMessage}</div>
@@ -59,7 +61,7 @@ const renderPage = (interactiveFormField, formValidation, [
           data-testid="signin-btn"
           onClick={(e) => {
             e.preventDefault();
-            sendLoginRequest(emailData, passData, setErrorMessage);
+            sendLoginRequest(emailData, passData, setErrorMessage, history);
           }}
         >
           ENTRAR
@@ -97,13 +99,15 @@ const formValidation = (
   return setIsEmailGood(false);
 };
 
-const LoginScreen = () => {
+const LoginScreen = (props) => {
   const [emailData, setEmailData] = useState('');
   const [passData, setPassData] = useState('');
   const [isEmailGood, setIsEmailGood] = useState(false);
   const [isPasswordGood, setIsPasswordGood] = useState(false);
   const [shouldRegister, setShouldRegister] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+
+  const { history } = props;
 
   if (shouldRegister) return <Redirect to="/register" />;
 
@@ -138,8 +142,9 @@ const LoginScreen = () => {
       setShouldRegister,
       errorMessage,
       setErrorMessage,
+      history,
     ],
   );
 };
 
-export default LoginScreen;
+export default withRouter(LoginScreen);

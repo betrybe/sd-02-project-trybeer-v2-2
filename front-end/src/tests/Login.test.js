@@ -1,8 +1,13 @@
 import React from 'react';
-import { render, fireEvent, wait } from '@testing-library/react';
+import { fireEvent, wait } from '@testing-library/react';
 import axios from 'axios';
-import history from '../services/history';
+import { createMemoryHistory } from 'history'
 import Login from '../pages/Login';
+import renderWithRouter from '../services/renderWithRouter';
+import { Router } from 'react-router-dom';
+
+const history = createMemoryHistory();
+
 
 const usersMock = {
   data: {
@@ -40,8 +45,10 @@ beforeEach(() => localStorage.clear());
 
 describe('Testing Login Page', () => {
   test('Testing if HTML elements appears', () => {
-    const { queryByTestId } = render(
-      <Login />,
+    const { queryByTestId } = renderWithRouter(
+      <Router history={history}>
+        <Login />
+      </Router>
     );
     const emailInput = queryByTestId('email-input');
     expect(emailInput).toBeInTheDocument();
@@ -54,9 +61,11 @@ describe('Testing Login Page', () => {
   });
 
   test('Testing funcionality of HTML elements', () => {
-    const { queryByTestId } = render(
-      <Login />,
-    );
+    const { queryByTestId } = renderWithRouter(
+      <Router history={history}>
+        <Login />
+      </Router>
+      );
 
     const emailInput = queryByTestId('email-input');
     const passInput = queryByTestId('password-input');
@@ -79,7 +88,7 @@ describe('Testing Login Page', () => {
   });
 
   test('Testing new user button', async () => {
-    const { queryByTestId } = render(
+    const { queryByTestId } = renderWithRouter(
       <Router history={history}>
         <Login />
       </Router>,
@@ -91,9 +100,10 @@ describe('Testing Login Page', () => {
   });
 
   test('Testing login button with client user', async () => {
-    const { queryByTestId } = render(
-      <Login />,
-    );
+    const { queryByTestId } = renderWithRouter(
+      <Router history={history}>
+        <Login />
+      </Router>    );
 
     const emailInput = queryByTestId('email-input');
     const passInput = queryByTestId('password-input');
@@ -108,9 +118,10 @@ describe('Testing Login Page', () => {
   });
 
   test('Testing axios catch in login button', async () => {
-    const { queryByTestId, getByText } = render(
-      <Login />,
-    );
+    const { queryByTestId, getByText } = renderWithRouter(
+      <Router history={history}>
+        <Login />
+      </Router>    );
 
     const emailInput = queryByTestId('email-input');
     const passInput = queryByTestId('password-input');
@@ -125,8 +136,10 @@ describe('Testing Login Page', () => {
   });
 
   test('Testing login button with administrator user', async () => {
-    const { queryByTestId } = render(
-      <Login />,
+    const { queryByTestId } = renderWithRouter(
+      <Router history={history}>
+        <Login />
+      </Router>
     );
 
     const emailInput = queryByTestId('email-input');

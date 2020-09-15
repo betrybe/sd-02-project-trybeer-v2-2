@@ -1,15 +1,18 @@
 import React, { useEffect } from 'react';
-import history from '../../services/history';
+import { withRouter } from 'react-router-dom';
 import '../../styles/AdminProfile.css';
 import AdminSideBar from '../../components/admin/AdminSideBar';
 
-export default function AdminProfile() {
+export default withRouter(function AdminProfile({ history }) {
   const isLoggedIn = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
+
   useEffect(() => {
     if (!isLoggedIn) history.push('/login');
-  }, [isLoggedIn]);
+  }, [isLoggedIn, history]);
+
   if (!isLoggedIn) return null;
   const { name, email } = isLoggedIn;
+
   return (
     <div className="admin-profile-flex-container">
       <AdminSideBar />
@@ -24,4 +27,4 @@ export default function AdminProfile() {
       </div>
     </div>
   );
-}
+});

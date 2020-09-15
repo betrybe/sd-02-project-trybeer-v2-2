@@ -1,53 +1,47 @@
 import React from 'react';
-import { Router } from 'react-router-dom';
-import { render, fireEvent } from '@testing-library/react';
-import history from '../services/history';
+import { withRouter, Router } from 'react-router-dom';
+import { fireEvent, wait } from '@testing-library/react';
 import Provider from '../context/TrybeerContext';
-import TopMenu from '../components/TopMenu';
-import ClientSideBar from '../components/client/ClientSideBar';
+import App from '../App';
+import renderWithRouter from '../services/renderWithRouter';
+
+
+const AppWithRouter = withRouter(App);
 
 describe('testing top menu dont display', () => {
   test('if top menu dont display at route /login', () => {
-    history.push('/login');
-    const { queryByTestId } = render(
-      <Router history={history}>
+    const { queryByTestId } = renderWithRouter(
         <Provider>
-          <TopMenu />
-        </Provider>
-      </Router>,
+          <AppWithRouter />
+        </Provider>, { route: '/login'}
     );
     expect(queryByTestId('top-title')).toBeNull();
   });
-  test('if top menu dont display at route /register', () => {
-    history.push('/register');
-    const { queryByTestId } = render(
-      <Router history={history}>
+  test('if top menu dont display at route /register', async () => {
+    const { queryByTestId, history } = renderWithRouter(
         <Provider>
-          <TopMenu />
+           <AppWithRouter />
         </Provider>
-      </Router>,
     );
+    const noAccountButton = queryByTestId('no-account-btn');
+    fireEvent.click(noAccountButton);
+    await wait(() => expect(history.location.pathname).toBe('/register'))
+    
     expect(queryByTestId('top-title')).toBeNull();
   });
   test('if top menu dont display at route /admin/profile', () => {
-    history.push('/admin/profile');
-    const { queryByTestId } = render(
-      <Router history={history}>
+    const { queryByTestId } = renderWithRouter(
         <Provider>
-          <TopMenu />
-        </Provider>
-      </Router>,
+           <AppWithRouter />
+        </Provider>, { route: '/admin/profile'}
     );
     expect(queryByTestId('top-title')).toBeNull();
   });
   test('if top menu dont display at route /admin/orders', () => {
-    history.push('/admin/orders');
-    const { queryByTestId } = render(
-      <Router history={history}>
+    const { queryByTestId } = renderWithRouter(
         <Provider>
-          <TopMenu />
-        </Provider>
-      </Router>,
+           <AppWithRouter />
+        </Provider>, { route: '/admin/orders' }
     );
     expect(queryByTestId('top-title')).toBeNull();
   });
@@ -55,61 +49,47 @@ describe('testing top menu dont display', () => {
 
 describe('if top menu display', () => {
   test('if display at /products', () => {
-    history.push('/products');
-    const { queryByTestId } = render(
-      <Router history={history}>
+    const { queryByTestId } = renderWithRouter(
         <Provider>
-          <TopMenu />
-        </Provider>
-      </Router>,
+           <AppWithRouter />
+        </Provider>, { route: '/products' }
     );
+
     expect(queryByTestId('top-title')).toBeInTheDocument();
     expect(queryByTestId('top-title').innerHTML).toBe('TryBeer');
   });
   test('if display at /orders', () => {
-    history.push('/orders');
-    const { queryByTestId } = render(
-      <Router history={history}>
+    const { queryByTestId } = renderWithRouter(
         <Provider>
-          <TopMenu />
-        </Provider>
-      </Router>,
+           <AppWithRouter />
+        </Provider>, { route: '/orders'}
     );
     expect(queryByTestId('top-title')).toBeInTheDocument();
     expect(queryByTestId('top-title').innerHTML).toBe('Meus Pedidos');
   });
   test('if display at /orders/:orderId', () => {
-    history.push('/orders/1');
-    const { queryByTestId } = render(
-      <Router history={history}>
+    const { queryByTestId } = renderWithRouter(
         <Provider>
-          <TopMenu />
-        </Provider>
-      </Router>,
+           <AppWithRouter />
+        </Provider>, { route: '/orders/1'}
     );
     expect(queryByTestId('top-title')).toBeInTheDocument();
     expect(queryByTestId('top-title').innerHTML).toBe('Detalhes de Pedido');
   });
   test('if display at /profile', () => {
-    history.push('/profile');
-    const { queryByTestId } = render(
-      <Router history={history}>
+    const { queryByTestId } = renderWithRouter(
         <Provider>
-          <TopMenu />
-        </Provider>
-      </Router>,
+           <AppWithRouter />
+        </Provider>, { route: '/profile'}
     );
     expect(queryByTestId('top-title')).toBeInTheDocument();
     expect(queryByTestId('top-title').innerHTML).toBe('Meu perfil');
   });
   test('if display at /checkout', () => {
-    history.push('/checkout');
-    const { queryByTestId } = render(
-      <Router history={history}>
+    const { queryByTestId } = renderWithRouter(
         <Provider>
-          <TopMenu />
-        </Provider>
-      </Router>,
+           <AppWithRouter />
+        </Provider>, { route: '/checkout'}
     );
     expect(queryByTestId('top-title')).toBeInTheDocument();
     expect(queryByTestId('top-title').innerHTML).toBe('Finalizar Pedido');
@@ -118,14 +98,10 @@ describe('if top menu display', () => {
 
 describe('display side bar after click hamburguer menu', () => {
   test('if side bar display correctly', () => {
-    history.push('/products');
-    const { queryByTestId } = render(
-      <Router history={history}>
+    const { queryByTestId } = renderWithRouter(
         <Provider>
-          <TopMenu />
-          <ClientSideBar />
-        </Provider>
-      </Router>,
+           <AppWithRouter />
+        </Provider>, { route: '/products'}
     );
     const hamburguerButton = queryByTestId('top-hamburguer');
     fireEvent.click(hamburguerButton);

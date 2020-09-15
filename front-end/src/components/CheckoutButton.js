@@ -1,10 +1,12 @@
 import React, { useContext } from 'react';
+import { withRouter } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import { TrybeerContext } from '../context/TrybeerContext';
 import useRefreshTotalPrice from '../hooks/useRefreshTotalPrice';
-import history from '../services/history';
 import '../styles/CheckoutButton.css';
 
-export default function CheckoutButton() {
+function CheckoutButton(props) {
+  const { history } = props;
   const { shopCart: [totalQty] } = useContext(TrybeerContext);
   const totalPrice = useRefreshTotalPrice(totalQty);
 
@@ -29,3 +31,11 @@ export default function CheckoutButton() {
     </div>
   );
 }
+
+export default withRouter(CheckoutButton);
+
+CheckoutButton.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+};

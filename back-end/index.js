@@ -58,6 +58,10 @@ io.on('connection', async (socket) => {
     io.emit(`${emailClient || userData.email}client`,
       `${userData.role === 'administrator' ? 'Loja' : userData.email}: ${message}`);
   });
+
+  socket.on('statusUpdate', ({ status, saleId }) => {
+    io.emit(`${saleId}`, status);
+  });
 });
 
 http.listen(CHAT_PORT, () => console.log(`Chat Listening on ${CHAT_PORT}`));

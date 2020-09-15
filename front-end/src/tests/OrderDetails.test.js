@@ -1,10 +1,13 @@
 import React from 'react';
-import { render, cleanup, wait } from '@testing-library/react';
+import { cleanup, wait } from '@testing-library/react';
 import axios from 'axios';
-import history from '../services/history';
+import { createMemoryHistory } from 'history'
 import Provider from '../context/TrybeerContext';
 import OrderDetails from '../pages/client/OrderDetails';
 import formatDateFunc from '../services/formatDateFunc';
+import renderWithRouter from '../services/renderWithRouter';
+
+const history = createMemoryHistory();
 
 const usersMock = {
   email: 'johnatas.henrique@gmail.com',
@@ -72,7 +75,7 @@ describe('Testing Order Details Page', () => {
     history.push('/orders/7');
 
     axios.mockResolvedValueOnce(orderMock);
-    const { queryByTestId } = render(
+    const { queryByTestId } = renderWithRouter(
       <Provider>
         <OrderDetails match={{ params: { id: orderId } }} />
       </Provider>,
@@ -102,7 +105,7 @@ describe('Testing Order Details Page', () => {
   test('if axios is rejected', async () => {
     localStorage.setItem('user', JSON.stringify(usersMock));
     axios.mockRejectedValueOnce(dataError);
-    const { getByText } = render(
+    const { getByText } = renderWithRouter(
       <Provider>
         <OrderDetails match={{ params: { id: orderId } }} />
       </Provider>,
@@ -114,7 +117,7 @@ describe('Testing Order Details Page', () => {
   test('if user is Logged', async () => {
     localStorage.setItem('user', JSON.stringify(usersMockWithoutToken));
     axios.mockResolvedValueOnce(orderMock);
-    render(
+    renderWithRouter(
       <Provider>
         <OrderDetails match={{ params: { id: orderId } }} />
       </Provider>,

@@ -1,7 +1,11 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { fireEvent } from '@testing-library/react';
+import { createMemoryHistory } from 'history'
 import Provider from '../context/TrybeerContext';
 import CartAddOrRemoveButtons from '../components/CartAddOrRemoveButtons';
+import renderWithRouter from '../services/renderWithRouter';
+
+const history = createMemoryHistory();
 
 const index = 0;
 
@@ -25,7 +29,7 @@ beforeEach(() => localStorage.clear());
 
 describe('testing CartAddOrRemoveButtons', () => {
   test('if component is rendering', () => {
-    const { queryByTestId } = render(
+    const { queryByTestId } = renderWithRouter(
       <Provider>
         <CartAddOrRemoveButtons product={product} index={index} />
       </Provider>,
@@ -38,7 +42,7 @@ describe('testing CartAddOrRemoveButtons', () => {
     expect(queryByTestId(`${index}-product-plus`).tagName).toBe('BUTTON');
   });
   test('if add button and remove button is working', () => {
-    const { queryByTestId } = render(
+    const { queryByTestId } = renderWithRouter(
       <Provider>
         <CartAddOrRemoveButtons product={product} index={index} />
       </Provider>,
@@ -63,7 +67,7 @@ describe('testing CartAddOrRemoveButtons', () => {
   });
   test('if localstorage exist with another product', () => {
     localStorage.setItem('cart', JSON.stringify(productMock));
-    const { queryByTestId } = render(
+    const { queryByTestId } = renderWithRouter(
       <Provider>
         <CartAddOrRemoveButtons product={product} index={index} />
       </Provider>,

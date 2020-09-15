@@ -1,11 +1,14 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
+import { createMemoryHistory } from 'history'
 import {
-  render, fireEvent, wait, cleanup,
+  fireEvent, wait, cleanup,
 } from '@testing-library/react';
 import axios from 'axios';
-import history from '../services/history';
 import Register from '../pages/RegisterPage';
+import renderWithRouter from '../services/renderWithRouter';
+
+const history = createMemoryHistory()
 
 const newUser = {
   name: 'Felipe Andrade',
@@ -72,7 +75,7 @@ beforeEach(() => {
 
 describe('Testing Register Page', () => {
   test('Testing if HTML elements appears', () => {
-    const { queryByTestId } = render(
+    const { queryByTestId } = renderWithRouter(
       <Register />,
     );
 
@@ -94,7 +97,7 @@ describe('Testing Register Page', () => {
   });
 
   test('Testing funcionality of HTML elements', async () => {
-    const { queryByTestId } = render(
+    const { queryByTestId } = renderWithRouter(
       <Register />,
     );
 
@@ -124,7 +127,7 @@ describe('Testing Register Page', () => {
   });
 
   test('Testing Login funcionality Button with client role', async () => {
-    const { queryByTestId } = render(
+    const { queryByTestId } = renderWithRouter(
       <Register />,
     );
     const nameInput = queryByTestId('signup-name');
@@ -148,7 +151,7 @@ describe('Testing Register Page', () => {
   });
 
   test('Testing Login funcionality Button with administrator role', async () => {
-    const { queryByTestId } = render(
+    const { queryByTestId } = renderWithRouter(
       <Register />,
     );
     const nameInput = queryByTestId('signup-name');
@@ -171,7 +174,7 @@ describe('Testing Register Page', () => {
   });
 
   test('Testing if register fail', async () => {
-    const { queryByTestId, queryByText } = render(
+    const { queryByTestId, queryByText } = renderWithRouter(
       <Register />,
     );
     const nameInput = queryByTestId('signup-name');
@@ -189,7 +192,7 @@ describe('Testing Register Page', () => {
   });
 
   test('Testing if inputs is valids', async () => {
-    const { queryByTestId } = render(
+    const { queryByTestId } = renderWithRouter(
       <Register />,
     );
 
@@ -227,7 +230,7 @@ describe('Testing Register Page', () => {
   });
 
   test('Testing if Login fail', async () => {
-    const { queryByTestId, queryByText } = render(
+    const { queryByTestId, queryByText } = renderWithRouter(
       <Register />,
     );
     const nameInput = queryByTestId('signup-name');

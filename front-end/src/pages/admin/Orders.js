@@ -1,29 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import PropTypes from 'prop-types';
 import OrderCard from '../../components/admin/OrderCard';
 import AdminSideBar from '../../components/admin/AdminSideBar';
 import checkLogin from '../../services/checkLogin';
-import history from '../../services/history';
 import '../../styles/AdminOrders.css';
 
-export default function AdminOrders() {
+export default function AdminOrders({ history }) {
   const [ordersData, setOrdersData] = useState([]);
-
   useEffect(() => {
-    const token = checkLogin();
+    const token = checkLogin(history);
 
     const getOrders = async () => {
       const ordersInfo = await axios({
         baseURL: 'http://localhost:3001/sales',
         method: 'get',
-        headers: { Accept: 'application/json', 'Content-Type': 'application/json', Authorization: token },
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: token,
+        },
       })
         .catch(({ response: { status } }) => status === 401 && history.push('/login'));
       return ordersInfo && setOrdersData(ordersInfo.data);
     };
 
     getOrders();
-  }, [setOrdersData]);
+  }, [setOrdersData, history]);
 
   return (
     <div className="admin-orders-page-container">
@@ -41,3 +44,7 @@ export default function AdminOrders() {
     </div>
   );
 }
+
+AdminOrders.propTypes = {
+  history: PropTypes.instanceOf(Object).isRequired,
+};
