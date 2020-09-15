@@ -6,7 +6,7 @@ const path = require('path');
 const cors = require('cors');
 
 const http = require('http').createServer(express());
-const sockets = require('socket.io')(http);
+const io = require('socket.io')(http);
 
 const userController = require('./controllers/userController');
 const productController = require('./controllers/productController');
@@ -53,10 +53,10 @@ const CHAT_PORT = process.env.CHAT_PORT || 5000;
 
 app.listen(NODE_PORT, () => console.log(`Listening on ${NODE_PORT}`));
 
-sockets.on('connection', async (socket) => {
+io.on('connection', async (socket) => {
   socket.on('receivedMsg', async (data) => {
     const { message, userData, emailClient } = data;
-    sockets.emit(`${emailClient || userData.email}client`, `${userData.email}: ${message}`);
+    io.emit(`${emailClient || userData.email}client`, `${userData.email}: ${message}`);
   });
 });
 
