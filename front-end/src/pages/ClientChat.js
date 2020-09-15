@@ -28,13 +28,8 @@ const clientPostMessage = async (value, history) => {
 
 const submitClientForm = async (e, value, clearInput, history) => {
   e.preventDefault();
-<<<<<<< HEAD
   await clientPostMessage(value);
   socket.emit('receivedMsg', { message: value, userData });
-=======
-  await clientPostMessage(value, history);
-  socket.emit('sentClientMessage', { message: value, userData });
->>>>>>> master
   clearInput('');
 };
 
@@ -61,28 +56,12 @@ const ClientFormList = ({ history }) => {
   );
 };
 
-<<<<<<< HEAD
 const ClientChat = () => {
   const [chatMessages, setChatMessages] = useState([]);
 
   socket.on(`${userData.email}client`, (message) => {
     setChatMessages([...chatMessages, message]);
   });
-=======
-const ClientChat = ({ history }) => {
-  const [chatMessages, setMessages] = useState([]);
-
-  useEffect(() => {
-    socket.emit('connected', userData);
-    socket.on('receivedClientMessage', (message) => {
-      setMessages((state) => [...state, message]);
-    });
-
-    return (() => {
-      socket.emit('disconnect');
-    });
-  }, []);
->>>>>>> master
 
   return (
     <div className="firstContainer">
