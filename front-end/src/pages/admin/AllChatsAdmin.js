@@ -29,21 +29,25 @@ const Conversations = () => {
     <div className="containerAllChats">
       <AdminSideBar />
       <div>
-        {chats.map(({ email }) => (
-          <div className="containerChat">
-            <Link to={{ pathname: '/adminChat', state: { email } }}>
-              <div className="containerEmail">
-                {email}
-              </div>
-            </Link>
-            {/* <div className="containerMessage">
-              {messages.sentMessage}
+        {chats.length === 0
+          ? (
+            <div className="noMsg" data-testid="text-for-no-conversation">
+              Nenhuma conversa por aqui
             </div>
-            <div className="containerTime">
-              {messages.time}
-            </div> */}
-          </div>
-        ))}
+          )
+          : chats.map(({ email, messages }) => (
+            <div className="containerChat">
+              <Link to={{ pathname: '/adminChat', state: { email, messages } }}>
+                <div className="containerEmail" data-testid="profile-name">
+                  {email}
+                </div>
+              </Link>
+              <div className="containerTime" data-testid="last-message">
+                {`Última mensagem às ${new Date(messages[0].time)
+                  .toLocaleTimeString([], { timeStyle: 'short' })}`}
+              </div>
+            </div>
+          ))}
       </div>
     </div>
   );

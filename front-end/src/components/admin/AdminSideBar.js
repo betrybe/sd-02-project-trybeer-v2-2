@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import '../../styles/AdminSideBar.css';
 
 const sideBarButtons = (text, dataTestId, route) => (
-  <Link to={route}>
+  <Link to={route} data-testid={dataTestId}>
     <button data-testid={dataTestId} type="button">
       {text}
     </button>

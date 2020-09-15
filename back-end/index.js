@@ -42,7 +42,6 @@ app.get('/sales/:id', validateJWT, saleController.getSaleProducts);
 app.patch('/sales/:id', validateJWT, saleController.updateSaleById);
 
 app.use(promiseErrors);
-// app.get('/messages/:email', validateJWT, chatController.getMessages);
 
 app.use(promiseErrors);
 
@@ -56,7 +55,8 @@ app.listen(NODE_PORT, () => console.log(`Listening on ${NODE_PORT}`));
 io.on('connection', async (socket) => {
   socket.on('receivedMsg', async (data) => {
     const { message, userData, emailClient } = data;
-    io.emit(`${emailClient || userData.email}client`, `${userData.email}: ${message}`);
+    io.emit(`${emailClient || userData.email}client`,
+      `${userData.role === 'administrator' ? 'Loja' : userData.email}: ${message}`);
   });
 });
 
