@@ -1,14 +1,7 @@
 import React, { useContext } from 'react';
-<<<<<<< HEAD
-import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import { TrybeerContext } from '../../context/TrybeerContext';
-
-=======
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { TrybeerContext } from '../../context/TrybeerContext';
->>>>>>> master
 import '../../styles/ClientSideBar.css';
 
 const redirectButton = (history, setShowSideMenu, route) => {

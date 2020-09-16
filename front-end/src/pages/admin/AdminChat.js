@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import socketIOClient from 'socket.io-client';
 import axios from 'axios';
 import PropTypes from 'prop-types';
@@ -39,7 +39,7 @@ export const MessageBox = ({ chat }) => (
       {
         chat.map((message) => (
           <ListItem
-            key={`${message}${keyStamp()}`}
+            key={`${message}${keyStamp() * Math.random()}`}
             value={message}
           />
         ))
@@ -71,12 +71,14 @@ export const FormList = ({ emailClient, history }) => {
   );
 };
 
-const AdminChat = ({ location: { state: { email } } }) => {
+const AdminChat = ({ location: { state: { email } }, history }) => {
   const [chatMessages, setChatMessages] = useState([]);
 
-  socket.on(`${email}client`, (message) => {
-    setChatMessages([...chatMessages, message]);
-  });
+  useEffect(() => {
+    socket.on(`${email}client`, (message) => {
+      setChatMessages((state) => [...state, message]);
+    });
+  }, []);
 
   return (
     <div className="firstContainer">
@@ -94,7 +96,6 @@ const AdminChat = ({ location: { state: { email } } }) => {
 export default withRouter(AdminChat);
 
 ListItem.propTypes = {
-  // keyIndex: PropTypes.number.isRequired,
   value: PropTypes.string.isRequired,
 };
 
@@ -107,7 +108,12 @@ FormList.propTypes = {
   history: PropTypes.instanceOf(Object).isRequired,
 };
 
+AdminChat.defaultProps = {
+  state: {},
+};
+
 AdminChat.propTypes = {
   location: PropTypes.instanceOf(Object).isRequired,
-  state: PropTypes.instanceOf(Object).isRequired,
+  state: PropTypes.instanceOf(Object),
+  history: PropTypes.instanceOf(Object).isRequired,
 };

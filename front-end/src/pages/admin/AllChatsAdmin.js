@@ -9,6 +9,7 @@ const token = checkLogin();
 
 const Conversations = () => {
   const [chats, setChats] = useState([]);
+
   useEffect(() => {
     const requestChats = async () => {
       const { data } = await axios({
@@ -36,8 +37,8 @@ const Conversations = () => {
             </div>
           )
           : chats.map(({ email, messages }) => (
-            <div className="containerChat">
-              <Link to={{ pathname: '/adminChat', state: { email, messages } }}>
+            <div className="containerChat" key={messages[0].time}>
+              <Link to={{ pathname: '/admin/chat', state: { email, messages } }}>
                 <div className="containerEmail" data-testid="profile-name">
                   {email}
                 </div>

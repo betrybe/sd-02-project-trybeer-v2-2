@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import socketIOClient from 'socket.io-client';
 import axios from 'axios';
 import { withRouter } from 'react-router-dom';
@@ -9,9 +9,8 @@ import './Chat.css';
 
 const ENDPOINT = 'http://localhost:5000/';
 const socket = socketIOClient(ENDPOINT);
-const userData = JSON.parse(localStorage.getItem('user'));
 
-const clientPostMessage = async (value, history) => {
+const clientPostMessage = async (value, history, userData) => {
   const token = checkLogin(history);
 
   return axios({
@@ -26,14 +25,14 @@ const clientPostMessage = async (value, history) => {
   });
 };
 
-const submitClientForm = async (e, value, clearInput, history) => {
+const submitClientForm = async (e, value, clearInput, history, userData) => {
   e.preventDefault();
-  await clientPostMessage(value);
+  await clientPostMessage(value, history, userData);
   socket.emit('receivedMsg', { message: value, userData });
   clearInput('');
 };
 
-const ClientFormList = ({ history }) => {
+const ClientFormList = ({ history, userData }) => {
   const [inputValue, setInputValue] = useState('');
   return (
     <form action="">
@@ -47,7 +46,7 @@ const ClientFormList = ({ history }) => {
       <div className="buttonContainer">
         <button
           type="submit"
-          onClick={(e) => submitClientForm(e, inputValue, setInputValue, history)}
+          onClick={(e) => submitClientForm(e, inputValue, setInputValue, history, userData)}
         >
           Send
         </button>
@@ -56,19 +55,22 @@ const ClientFormList = ({ history }) => {
   );
 };
 
-const ClientChat = () => {
+const ClientChat = ({ history }) => {
   const [chatMessages, setChatMessages] = useState([]);
+  const userData = JSON.parse(localStorage.getItem('user'));
 
-  socket.on(`${userData.email}client`, (message) => {
-    setChatMessages([...chatMessages, message]);
-  });
+  useEffect(() => {
+    socket.on(`${userData.email}client`, (message) => {
+      setChatMessages((state) => [...state, message]);
+    });
+  }, []);
 
   return (
     <div className="firstContainer">
       <div className="chatContainer">
         <MessageBox chat={chatMessages} />
         <div className="inputMessageContainer">
-          <ClientFormList history={history} />
+          <ClientFormList history={history} userData={userData} />
         </div>
       </div>
     </div>
@@ -87,6 +89,7 @@ MessageBox.propTypes = {
 
 ClientFormList.propTypes = {
   history: PropTypes.instanceOf(Object).isRequired,
+  userData: PropTypes.instanceOf(Object).isRequired,
 };
 
 ClientChat.propTypes = {
