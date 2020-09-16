@@ -32,21 +32,25 @@ const submitClientForm = async (e, value, clearInput, history, userData) => {
   clearInput('');
 };
 
+const infoForm = (chatValue, setChatValue) => (
+  <div className="containerInput">
+    <input
+      className="messageInput"
+      value={chatValue}
+      onChange={(e) => setChatValue(e.target.value)}
+    />
+  </div>
+);
+
 const ClientFormList = ({ history, userData }) => {
-  const [inputValue, setInputValue] = useState('');
+  const [chatValue, setChatValue] = useState('');
   return (
     <form action="">
-      <div className="containerInput">
-        <input
-          className="messageInput"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-        />
-      </div>
+      {infoForm(chatValue, setChatValue)}
       <div className="buttonContainer">
         <button
           type="submit"
-          onClick={(e) => submitClientForm(e, inputValue, setInputValue, history, userData)}
+          onClick={(e) => submitClientForm(e, chatValue, setChatValue, history, userData)}
         >
           Send
         </button>
