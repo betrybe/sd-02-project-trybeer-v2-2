@@ -51,20 +51,24 @@ const findClientByEmail = async (email) => {
   return modelAnswer;
 };
 
-const getMessages = async (userEmail) => {
-  const [{ messages }] = await connection()
-    .then((db) => db.collection('chat').find({ email: userEmail }).toArray())
-    .catch((err) => {
-      throw new Error(err.message, err.status);
-    });
-  return messages;
+const getAllChats = async () => {
+  const db = await connection();
+  const modelAnswer = await db.collection('messages')
+    .aggregate([
+      { $unwind: '$messages' },
+      { $sort: { 'messages.time': 1 } },
+      { $group: { _id: '$email', messages: { $push: '$messages' } } },
+      { $project: { _id: 0, messages: 1, email: '$_id' } },
+    ]).toArray();
+  return modelAnswer;
 };
+
 module.exports = {
   newOnlineUser,
   registerMessages,
-  getMessages,
   emailSchemaExist,
   updateEmailMessage,
   updateAdminMessage,
   findClientByEmail,
+  getAllChats,
 };

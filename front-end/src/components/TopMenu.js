@@ -32,7 +32,14 @@ export default function TopMenu() {
   useEffect(() => {
     setDisplayTopMenu(true);
     if (pathname) {
-      const dontDisplay = ['/', '/register', '/login', '/admin'];
+      const dontDisplay = [
+        '/',
+        '/register',
+        '/login',
+        '/admin/profile',
+        '/admin/orders',
+        '/admin/chat',
+      ];
       if (dontDisplay.find((path) => pathname === path)) {
         setDisplayTopMenu(false);
         setHeaderTitle('hidden');
@@ -49,5 +56,3 @@ export default function TopMenu() {
 
   return displayTopMenu && renderPageComponents(toggleSideMenu, headerTitle);
 }
-
-// <div>Icons made by <a href="https://www.flaticon.com/authors/kiranshastry" title="Kiranshastry">Kiranshastry</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>

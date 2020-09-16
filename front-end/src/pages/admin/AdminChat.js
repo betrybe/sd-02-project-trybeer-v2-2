@@ -6,10 +6,8 @@ import { withRouter } from 'react-router-dom';
 import checkLogin from '../../services/checkLogin';
 import AdminSideBar from '../../components/admin/AdminSideBar';
 
-const ENDPOINT_ADMIN = 'http://localhost:5000/admin';
 const ENDPOINT_CLIENT = 'http://localhost:5000/';
-const socketAdmin = socketIOClient(ENDPOINT_ADMIN);
-const socketClient = socketIOClient(ENDPOINT_CLIENT);
+const socket = socketIOClient(ENDPOINT_CLIENT);
 const userData = JSON.parse(localStorage.getItem('user'));
 const keyStamp = () => Date.now();
 
@@ -26,8 +24,8 @@ const adminSubmitForm = async (e, value, clearInput, emailClient, history) => {
     },
     data: { message: value, emailClient },
   });
+  socket.emit('receivedMsg', { message: value, userData, emailClient });
 
-  socketClient.emit('sentClientMessage', { message: value, userData, emailClient });
   clearInput('');
 };
 
@@ -41,7 +39,7 @@ export const MessageBox = ({ chat }) => (
       {
         chat.map((message) => (
           <ListItem
-            key={`${message}${keyStamp()}`}
+            key={`${message}${keyStamp() * Math.random()}`}
             value={message}
           />
         ))
@@ -73,18 +71,18 @@ export const FormList = ({ emailClient, history }) => {
   );
 };
 
-const AdminChat = ({ email = 'cliente@cliente.com', history }) => {
-  const [chatMessages, setMessages] = useState([]);
+const AdminChat = ({ location: { state: { email } }, history }) => {
+  const [chatMessages, setChatMessages] = useState([]);
+
   useEffect(() => {
-    socketAdmin.on('receivedClientMessage', (message) => {
-      setMessages((state) => [...state, message]);
+    socket.on(`${email}client`, (message) => {
+      setChatMessages((state) => [...state, message]);
     });
   }, []);
 
   return (
     <div className="firstContainer">
       <AdminSideBar />
-      Chat Admin
       <div className="chatContainer">
         <MessageBox chat={chatMessages} />
         <div className="inputMessageContainer">
@@ -98,7 +96,6 @@ const AdminChat = ({ email = 'cliente@cliente.com', history }) => {
 export default withRouter(AdminChat);
 
 ListItem.propTypes = {
-  // keyIndex: PropTypes.number.isRequired,
   value: PropTypes.string.isRequired,
 };
 
@@ -112,10 +109,11 @@ FormList.propTypes = {
 };
 
 AdminChat.defaultProps = {
-  email: 'cliente@cliente.com',
+  state: {},
 };
 
 AdminChat.propTypes = {
-  email: PropTypes.string,
+  location: PropTypes.instanceOf(Object).isRequired,
+  state: PropTypes.instanceOf(Object),
   history: PropTypes.instanceOf(Object).isRequired,
 };

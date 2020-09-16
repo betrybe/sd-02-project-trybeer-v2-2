@@ -6,7 +6,7 @@ const path = require('path');
 const cors = require('cors');
 
 const http = require('http').createServer(express());
-const sockets = require('socket.io')(http);
+const io = require('socket.io')(http);
 
 const userController = require('./controllers/userController');
 const productController = require('./controllers/productController');
@@ -27,6 +27,7 @@ app.use(bodyParser.json());
 app.post('/users', userController.createUser);
 app.patch('/users/me', validateJWT, userController.updateUserById);
 app.post('/users/chat', validateJWT, chatController.clientAdminMessage);
+app.get('/users/chat', validateJWT, chatController.getAllChats);
 app.post('/users/admin/chat', validateJWT, chatController.adminClientMessage);
 
 app.get('/login', validateJWT, userController.getLoginUser);
@@ -41,7 +42,6 @@ app.get('/sales/:id', validateJWT, saleController.getSaleProducts);
 app.patch('/sales/:id', validateJWT, saleController.updateSaleById);
 
 app.use(promiseErrors);
-// app.get('/messages/:email', validateJWT, chatController.getMessages);
 
 app.use(promiseErrors);
 
@@ -52,31 +52,15 @@ const CHAT_PORT = process.env.CHAT_PORT || 5000;
 
 app.listen(NODE_PORT, () => console.log(`Listening on ${NODE_PORT}`));
 
-const clientsToAdmins = sockets.of('admin');
-let usersId = [];
-
-sockets.on('connection', async (socket) => {
-  socket.on('connected', (userData) => {
-    const { email } = userData;
-    const existUser = usersId.some((user) => user.email === email);
-    if (!existUser) {
-      usersId.push({ email, id: socket.id });
-    }
-  });
-
-  socket.on('sentClientMessage', async (data) => {
+io.on('connection', async (socket) => {
+  socket.on('receivedMsg', async (data) => {
     const { message, userData, emailClient } = data;
-    clientsToAdmins.emit('receivedClientMessage', `${userData.email}: ${message}`);
-    const clientId = usersId.find(({ email }) => email === emailClient || email === userData.email);
-    sockets.to(clientId.id).emit('receivedClientMessage', `${userData.email}: ${message}`);
-  });
-
-  socket.on('disconnect', () => {
-    usersId = usersId.filter(({ id }) => id !== socket.id);
+    io.emit(`${emailClient || userData.email}client`,
+      `${userData.role === 'administrator' ? 'Loja' : userData.email}: ${message}`);
   });
 
   socket.on('statusUpdate', ({ status, saleId }) => {
-    sockets.emit(`${saleId}`, status);
+    io.emit(`${saleId}`, status);
   });
 });
 

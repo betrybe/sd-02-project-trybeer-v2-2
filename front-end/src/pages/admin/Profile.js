@@ -25,15 +25,6 @@ export default withRouter(function AdminProfile({ history }) {
           {`Email: ${email}`}
         </div>
       </div>
-      <div>
-        <button type="button" data-testid="side-menu-item-orders" onClick={() => history.push('/admin/orders')}>Pedidos</button>
-      </div>
-      <div>
-        <button type="button" data-testid="side-menu-item-profile" onClick={() => history.push('/admin/profile')}>Perfil</button>
-      </div>
-      <div>
-        <button type="button" data-testid="side-menu-item-logout" onClick={() => history.push('/login')}>Sair</button>
-      </div>
     </div>
   );
 });

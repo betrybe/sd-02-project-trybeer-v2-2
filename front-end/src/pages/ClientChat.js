@@ -9,9 +9,8 @@ import './Chat.css';
 
 const ENDPOINT = 'http://localhost:5000/';
 const socket = socketIOClient(ENDPOINT);
-const userData = JSON.parse(localStorage.getItem('user'));
 
-const clientPostMessage = async (value, history) => {
+const clientPostMessage = async (value, history, userData) => {
   const token = checkLogin(history);
 
   return axios({
@@ -26,28 +25,32 @@ const clientPostMessage = async (value, history) => {
   });
 };
 
-const submitClientForm = async (e, value, clearInput, history) => {
+const submitClientForm = async (e, value, clearInput, history, userData) => {
   e.preventDefault();
-  await clientPostMessage(value, history);
-  socket.emit('sentClientMessage', { message: value, userData });
+  await clientPostMessage(value, history, userData);
+  socket.emit('receivedMsg', { message: value, userData });
   clearInput('');
 };
 
-const ClientFormList = ({ history }) => {
-  const [inputValue, setInputValue] = useState('');
+const infoForm = (chatValue, setChatValue) => (
+  <div className="containerInput">
+    <input
+      className="messageInput"
+      value={chatValue}
+      onChange={(e) => setChatValue(e.target.value)}
+    />
+  </div>
+);
+
+const ClientFormList = ({ history, userData }) => {
+  const [chatValue, setChatValue] = useState('');
   return (
     <form action="">
-      <div className="containerInput">
-        <input
-          className="messageInput"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-        />
-      </div>
+      {infoForm(chatValue, setChatValue)}
       <div className="buttonContainer">
         <button
           type="submit"
-          onClick={(e) => submitClientForm(e, inputValue, setInputValue, history)}
+          onClick={(e) => submitClientForm(e, chatValue, setChatValue, history, userData)}
         >
           Send
         </button>
@@ -57,26 +60,21 @@ const ClientFormList = ({ history }) => {
 };
 
 const ClientChat = ({ history }) => {
-  const [chatMessages, setMessages] = useState([]);
+  const [chatMessages, setChatMessages] = useState([]);
+  const userData = JSON.parse(localStorage.getItem('user'));
 
   useEffect(() => {
-    socket.emit('connected', userData);
-    socket.on('receivedClientMessage', (message) => {
-      setMessages((state) => [...state, message]);
-    });
-
-    return (() => {
-      socket.emit('disconnect');
+    socket.on(`${userData.email}client`, (message) => {
+      setChatMessages((state) => [...state, message]);
     });
   }, []);
 
   return (
     <div className="firstContainer">
-      ChatClient
       <div className="chatContainer">
         <MessageBox chat={chatMessages} />
         <div className="inputMessageContainer">
-          <ClientFormList history={history} />
+          <ClientFormList history={history} userData={userData} />
         </div>
       </div>
     </div>
@@ -95,6 +93,7 @@ MessageBox.propTypes = {
 
 ClientFormList.propTypes = {
   history: PropTypes.instanceOf(Object).isRequired,
+  userData: PropTypes.instanceOf(Object).isRequired,
 };
 
 ClientChat.propTypes = {
