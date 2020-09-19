@@ -3,7 +3,7 @@ import socketIOClient from 'socket.io-client';
 import axios from 'axios';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { MessageBox, ListItem } from './admin/AdminChat';
+import { MessageBox, ListItem, requestChats } from './admin/AdminChat';
 import checkLogin from '../services/checkLogin';
 import './Chat.css';
 
@@ -61,6 +61,7 @@ const ClientFormList = ({ history, userData }) => {
 
 const ClientChat = ({ history }) => {
   const [chatMessages, setChatMessages] = useState([]);
+  const [chats, setChats] = useState([]);
   const userData = JSON.parse(localStorage.getItem('user'));
 
   useEffect(() => {
@@ -69,10 +70,20 @@ const ClientChat = ({ history }) => {
     });
   }, []);
 
+  useEffect(() => {
+    const fetchChats = async () => {
+      const allChats = await requestChats(history);
+      setChats(allChats.find(({ email }) => userData.email === email));
+    };
+    fetchChats();
+  }, []);
+
+  console.log(chats);
+
   return (
     <div className="firstContainer">
       <div className="chatContainer">
-        <MessageBox chat={chatMessages} />
+        <MessageBox chat={chatMessages} chatHistory={chats || []} />
         <div className="inputMessageContainer">
           <ClientFormList history={history} userData={userData} />
         </div>
