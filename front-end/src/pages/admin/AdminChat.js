@@ -141,6 +141,7 @@ ListItem.propTypes = {
 
 MessageBox.propTypes = {
   chat: PropTypes.instanceOf(Object).isRequired,
+  chatHistory: PropTypes.instanceOf(Array).isRequired,
 };
 
 FormList.propTypes = {
