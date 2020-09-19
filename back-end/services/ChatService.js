@@ -5,26 +5,36 @@ const errorMsgNotSaved = { error: true, message: 'Message not saved', code: 'bad
 const clientAdminMessage = async (message, email) => {
   const existEmail = await ChatModel.emailSchemaExist(email);
   if (!existEmail) {
-    return ChatModel.registerMessages(message, email).catch(() => {
+    try {
+      return ChatModel.registerMessages(message, email);
+    } catch (err) {
       throw errorMsgNotSaved;
-    });
+    }
   }
-  return ChatModel.updateEmailMessage(email, message).catch(() => {
+  try {
+    return ChatModel.updateEmailMessage(email, message);
+  } catch (err) {
     throw errorMsgNotSaved;
-  });
+  }
 };
 
-const adminClientMessage = async (message, emailClient) => ChatModel
-  .updateAdminMessage(message, emailClient).catch(() => {
+const adminClientMessage = async (message, emailClient) => {
+  try {
+    const modelAnswer = await ChatModel.updateAdminMessage(message, emailClient);
+    return modelAnswer;
+  } catch (err) {
     throw errorMsgNotSaved;
-  });
+  }
+};
 
 const getAllChats = async () => {
-  const modelAnswer = await ChatModel.getAllChats().catch(() => {
+  try {
+    const modelAnswer = await ChatModel.getAllChats();
+    return modelAnswer;
+  } catch (err) {
     const error = { error: true, message: 'Messages not found', code: 'not_found' };
     throw error;
-  });
-  return modelAnswer;
+  }
 };
 
 module.exports = {

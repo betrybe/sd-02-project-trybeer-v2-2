@@ -44,7 +44,7 @@ const Conversations = () => {
                 </div>
               </Link>
               <div className="containerTime" data-testid="last-message">
-                {`Última mensagem às ${new Date(messages[0].time)
+                {`Última mensagem às ${new Date(messages[messages.length - 1].time)
                   .toLocaleTimeString([], { timeStyle: 'short' })}`}
               </div>
             </div>
