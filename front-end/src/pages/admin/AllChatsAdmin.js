@@ -36,15 +36,15 @@ const Conversations = () => {
               Nenhuma conversa por aqui
             </div>
           )
-          : chats.map(({ email, messages }) => (
-            <div className="containerChat" key={messages[0].time}>
-              <Link to={{ pathname: '/admin/chat', state: { email, messages } }}>
+          : chats.map(({ email, time }) => (
+            <div className="containerChat" key={time}>
+              <Link to={{ pathname: '/admin/chat', state: { email } }}>
                 <div className="containerEmail" data-testid="profile-name">
                   {email}
                 </div>
               </Link>
               <div className="containerTime" data-testid="last-message">
-                {`Última mensagem às ${new Date(messages[messages.length - 1].time)
+                {`Última mensagem às ${new Date(time)
                   .toLocaleTimeString([], { timeStyle: 'short' })}`}
               </div>
             </div>

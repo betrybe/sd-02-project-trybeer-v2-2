@@ -15,11 +15,19 @@ const adminClientMessage = rescue(async (req, res) => {
 
 const getAllChats = rescue(async (_req, res) => {
   const serviceAnswer = await ChatService.getAllChats();
-  res.status(200).json(serviceAnswer);
+  return res.status(200).json(serviceAnswer);
+});
+
+const getChatByEmail = rescue(async (req, res) => {
+  const { email } = req.params;
+  const { role, email: userEmail } = req.user;
+  const serviceAnswer = await ChatService.getChatByEmail(email, role, userEmail);
+  return res.status(200).json(serviceAnswer);
 });
 
 module.exports = {
   clientAdminMessage,
   adminClientMessage,
   getAllChats,
+  getChatByEmail,
 };
