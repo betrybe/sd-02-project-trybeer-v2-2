@@ -248,4 +248,15 @@ describe('chatController tests', () => {
       expect(ChatModel.registerMessages).toBeCalledTimes(1);
     });
   });
+/*   describe('Testing getChatByEmail', () => {
+    it('Test if service catch if client try acess other client history', async () => {
+      const mockReq = {
+        params: { email: 'cliente2@cliente.com' },
+        user: { email: 'cliente@cliente.com', role: 'client' },
+      };
+      const mockJson = jest.fn();
+      const mockNext = jest.fn();
+
+    })
+  }) */
 });

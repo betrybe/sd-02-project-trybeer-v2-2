@@ -38,11 +38,18 @@ const updateAdminMessage = async (message, emailClient) => {
   );
 };
 
-/* const findClientByEmail = async (email) => {
+const findClientByEmail = async (email) => {
   const db = await connection();
-  const modelAnswer = db.collection('messages').findOne({ email });
+  const modelAnswer = await db.collection('messages')
+    .aggregate([
+      { $match: { email } },
+      { $unwind: '$messages' },
+      { $sort: { 'messages.time': 1 } },
+      { $group: { _id: '$email', messages: { $push: '$messages' } } },
+      { $project: { _id: 0, email: '$_id', messages: 1 } },
+    ]).toArray();
   return modelAnswer;
-}; */
+};
 
 const getAllChats = async () => {
   const db = await connection();
@@ -51,7 +58,12 @@ const getAllChats = async () => {
       { $unwind: '$messages' },
       { $sort: { 'messages.time': 1 } },
       { $group: { _id: '$email', messages: { $push: '$messages' } } },
-      { $project: { _id: 0, messages: 1, email: '$_id' } },
+      {
+        $project: {
+          _id: 0, email: '$_id', time: { $arrayElemAt: ['$messages.time', -1] },
+        },
+      },
+      { $sort: { time: 1 } },
     ]).toArray();
   return modelAnswer;
 };
@@ -62,4 +74,5 @@ module.exports = {
   updateEmailMessage,
   updateAdminMessage,
   getAllChats,
+  findClientByEmail,
 };

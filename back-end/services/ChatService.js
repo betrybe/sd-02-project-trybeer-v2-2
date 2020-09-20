@@ -1,6 +1,7 @@
 const ChatModel = require('../mongoModels/ChatModel');
 
 const errorMsgNotSaved = { error: true, message: 'Message not saved', code: 'bad_request' };
+const errorNotFound = { error: true, message: 'Messages not found', code: 'not_found' };
 
 const clientAdminMessage = async (message, email) => {
   const existEmail = await ChatModel.emailSchemaExist(email);
@@ -32,8 +33,20 @@ const getAllChats = async () => {
     const modelAnswer = await ChatModel.getAllChats();
     return modelAnswer;
   } catch (err) {
-    const error = { error: true, message: 'Messages not found', code: 'not_found' };
+    throw errorNotFound;
+  }
+};
+
+const getChatByEmail = async (email, role, userEmail) => {
+  if (role === 'client' && email !== userEmail) {
+    const error = { error: true, message: 'You do not have permission', code: 'unauthorized' };
     throw error;
+  }
+  try {
+    const modelAnswer = await ChatModel.findClientByEmail(email);
+    return modelAnswer;
+  } catch (err) {
+    throw errorNotFound;
   }
 };
 
@@ -41,4 +54,5 @@ module.exports = {
   clientAdminMessage,
   adminClientMessage,
   getAllChats,
+  getChatByEmail,
 };
