@@ -53,7 +53,7 @@ export const ListItem = ({
         <span>{`${name} -`}</span>
       </div>
       <div className={`${user}-li-header`} data-testid="message-time">
-        <span>{`- ${time}`}</span>
+        <span>{`- ${time}:`}</span>
       </div>
     </div>
     <div className={`${user}-li-body`} data-testid="text-message">
@@ -83,7 +83,8 @@ export const MessageBox = ({ chat, chatHistory }) => (
         chat.map((message) => (
           <ListItem
             key={`${message}${keyStamp() * Math.random()}`}
-            value={`${new Date().toLocaleTimeString([], { timeStyle: 'short' })} - ${message.split(':', 1)}:`}
+            time={`${new Date().toLocaleTimeString([], { timeStyle: 'short' })}`}
+            name={message.split(':', 1)}
             message={message.slice(message.split(':', 1)[0].length + 1, message.length)}
             user={'Loja'.match(message.split(':', 1)) ? 'admin' : 'client'}
           />
