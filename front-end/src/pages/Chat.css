@@ -62,7 +62,7 @@ li {
   width: 65vw;
 }
 
-@media (max-width:800px) {
+@media ( max-width : 800px ) {
 
   .messagesBox {
     background-color: white;

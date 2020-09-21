@@ -45,8 +45,8 @@
   width: 100%;
 }
 
-@media ( max-width :800px ) {
-  
+@media ( max-width : 800px ) {
+
   .admin-side-bar-header {
     font-size: 3vh;
   }
