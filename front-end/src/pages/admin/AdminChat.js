@@ -78,7 +78,7 @@ export const MessageBox = ({ chat, chatHistory }) => (
         ))
       }
     </ul>
-    <ul id="message">
+    <ul className="message-container">
       {
         chat.map((message) => (
           <ListItem

@@ -21,7 +21,7 @@
   padding: 1% 0;
 }
 
-#message {
+.message-container {
   align-self: center;
   padding: 1% 0;
 }
@@ -66,7 +66,7 @@
   width: 30vw;
 }
 
-.containerTime  {
+.containerTime {
   margin-top: 2%;
 }
 
@@ -80,9 +80,10 @@
   justify-content: center;
 }
 
-@media ( max-width: 800px ) {
+@media ( max-width :800px ) {
+  
   .containerChat {
-       width: 60vw;
+    width: 60vw;
   }
 
   .noMsg {
