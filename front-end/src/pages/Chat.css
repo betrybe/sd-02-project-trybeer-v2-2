@@ -8,13 +8,13 @@
 
 
 .messagesBox {
-  background-color: yellow;
   display: flex;
+  font-size: 3vh;
   height: 66vh;
   justify-content: flex-start;
   margin: 0 1vh 1vh 0;
   overflow: auto;
-  width: 50vw;
+  width: 90%;
 }
 
 form {
@@ -29,7 +29,7 @@ form {
   display: flex;
   flex-direction: row;
   height: 4vh;
-  width: 50vw;
+  width: 90%;
 }
 
 .containerInput {
@@ -53,4 +53,20 @@ form {
 
 li {
   list-style-type: none;
+}
+
+.chatContainer {
+  align-items: flex-end;
+  display: flex;
+  flex-direction: column;
+  width: 65vw;
+}
+
+@media ( max-width: 800px ) {
+  .messagesBox {
+    background-color: white;
+    flex-direction: column;
+    font-size: 2vh;
+    width: 90%;
+  }
 }

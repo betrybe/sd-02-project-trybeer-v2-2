@@ -5,16 +5,17 @@ import PropTypes from 'prop-types';
 import { withRouter, Link } from 'react-router-dom';
 import checkLogin from '../../services/checkLogin';
 import AdminSideBar from '../../components/admin/AdminSideBar';
+import { ReactComponent as BackButton } from '../../images/back-arrow.svg';
 
 const ENDPOINT_CLIENT = 'http://localhost:5000/';
 const socket = socketIOClient(ENDPOINT_CLIENT);
 const userData = JSON.parse(localStorage.getItem('user'));
 const keyStamp = () => Date.now();
 
-export const requestChats = async (history) => {
+export const requestChats = async (history, email) => {
   const token = checkLogin(history);
   const { data } = await axios({
-    baseURL: 'http://localhost:3001/users/chat',
+    baseURL: `http://localhost:3001/users/chat/${email}`,
     method: 'get',
     headers: {
       Accept: 'application/json',
@@ -43,19 +44,36 @@ const adminSubmitForm = async (e, value, clearInput, emailClient, history) => {
   clearInput('');
 };
 
-export const ListItem = ({ value }) => (
-  <li>{value}</li>
+export const ListItem = ({
+  user, message, time, name,
+}) => (
+  <li className={`${user}-chat-container`}>
+    <div className="li-container">
+      <div className={`${user}-li-header`} data-testid="nickname">
+        <span>{`${name} -`}</span>
+      </div>
+      <div className={`${user}-li-header`} data-testid="message-time">
+        <span>{`- ${time}`}</span>
+      </div>
+    </div>
+    <div className={`${user}-li-body`} data-testid="text-message">
+      {message}
+    </div>
+  </li>
 );
 
 export const MessageBox = ({ chat, chatHistory }) => (
   <div className="messagesBox">
-    <ul>
+    <ul className="ul-container">
       {
         (chatHistory.length === 0)
-        || chatHistory.messages.map(({ sentMessage, chatName, time }) => (
+        || chatHistory[0].messages.map(({ sentMessage, chatName, time }) => (
           <ListItem
             key={`${sentMessage}${keyStamp() * Math.random()}`}
-            value={`${new Date(time).toLocaleTimeString([], { timeStyle: 'short' })} - ${chatName}: ${sentMessage}`}
+            time={`${new Date(time).toLocaleTimeString([], { timeStyle: 'short' })}`}
+            name={chatName}
+            message={sentMessage}
+            user={(chatName === 'Loja') ? 'admin' : 'client'}
           />
         ))
       }
@@ -65,7 +83,9 @@ export const MessageBox = ({ chat, chatHistory }) => (
         chat.map((message) => (
           <ListItem
             key={`${message}${keyStamp() * Math.random()}`}
-            value={`${new Date().toLocaleTimeString([], { timeStyle: 'short' })} - ${message}`}
+            value={`${new Date().toLocaleTimeString([], { timeStyle: 'short' })} - ${message.split(':', 1)}:`}
+            message={message.slice(message.split(':', 1)[0].length + 1, message.length)}
+            user={'Loja'.match(message.split(':', 1)) ? 'admin' : 'client'}
           />
         ))
       }
@@ -80,6 +100,7 @@ export const FormList = ({ emailClient, history }) => {
     <form action="">
       <div className="containerInput">
         <input
+          data-testid="chat-message"
           className="messageInput"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
@@ -87,6 +108,7 @@ export const FormList = ({ emailClient, history }) => {
       </div>
       <div className="buttonContainer">
         <button
+          data-testid="send-message-btn"
           type="submit"
           onClick={(e) => adminSubmitForm(e, inputValue, setInputValue, emailClient, history)}
         >
@@ -105,24 +127,26 @@ const AdminChat = ({ location: { state: { email } }, history }) => {
     socket.on(`${email}client`, (message) => {
       setChatMessages((state) => [...state, message]);
     });
-  }, []);
+  }, [email]);
 
   useEffect(() => {
     const fetchChats = async () => {
-      const allChats = await requestChats(history);
-      setChats(allChats.find(({ email: emailChat }) => email === emailChat));
+      const allChats = await requestChats(history, email);
+      setChats(allChats);
     };
     fetchChats();
-  }, []);
-
-  console.log(chatMessages);
+  }, [email, history]);
 
   return (
     <div className="firstContainer">
       <AdminSideBar />
       <div className="chatContainer">
         <Link to="/admin/chats">
-          {`Setinha  Coversando com ${email}`}
+          <BackButton
+            className="back-button"
+            alt="Back Button - Icons made by Kiranshastry@https://www.flaticon.com/authors/google"
+          />
+          <div className="back-button-message">{`Coversando com ${email}`}</div>
         </Link>
         <MessageBox chat={chatMessages} chatHistory={chats} />
         <div className="inputMessageContainer">
@@ -136,7 +160,10 @@ const AdminChat = ({ location: { state: { email } }, history }) => {
 export default withRouter(AdminChat);
 
 ListItem.propTypes = {
-  value: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  time: PropTypes.string.isRequired,
+  user: PropTypes.string.isRequired,
+  message: PropTypes.string.isRequired,
 };
 
 MessageBox.propTypes = {

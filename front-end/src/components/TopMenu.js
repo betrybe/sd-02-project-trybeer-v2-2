@@ -38,6 +38,7 @@ export default function TopMenu() {
         '/login',
         '/admin/profile',
         '/admin/orders',
+        '/admin/chats',
         '/admin/chat',
       ];
       if (dontDisplay.find((path) => pathname === path)) {
