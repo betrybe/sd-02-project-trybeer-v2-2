@@ -2,8 +2,6 @@ const { MongoClient } = require('mongodb');
 const chatController = require('./chatController');
 const ChatModel = require('../mongoModels/ChatModel');
 
-jest.spyOn(MongoClient, 'connect');
-
 afterEach(() => jest.clearAllMocks());
 
 const mockGetDB = (result, insertResult) => ({
@@ -39,7 +37,8 @@ describe('chatController tests', () => {
       const mockRes = { status: jest.fn().mockReturnValueOnce({ json: mockJson }) };
 
       const bdMock = mockGetDB(mockResponse);
-      MongoClient.connect.mockResolvedValueOnce(bdMock);
+      jest.spyOn(MongoClient, 'connect')
+        .mockResolvedValueOnce(bdMock);
 
       await chatController.getAllChats(null, mockRes, mockNext);
 
@@ -83,7 +82,8 @@ describe('chatController tests', () => {
       const mockRes = { status: jest.fn().mockReturnValueOnce(mockEnd) };
 
       const bdMock = mockGetDB(mockResponse);
-      MongoClient.connect.mockResolvedValueOnce(bdMock);
+      jest.spyOn(MongoClient, 'connect')
+        .mockResolvedValueOnce(bdMock);
 
       await chatController.adminClientMessage(mockReqBody, mockRes, mockNext);
 
@@ -135,8 +135,10 @@ describe('chatController tests', () => {
       const mockRes = { status: jest.fn().mockReturnValueOnce(mockEnd) };
 
       const bdMock = mockGetDB(mockResponse);
-      MongoClient.connect.mockResolvedValueOnce(bdMock);
-      MongoClient.connect.mockResolvedValueOnce(bdMock);
+      jest.spyOn(MongoClient, 'connect')
+        .mockResolvedValueOnce(bdMock);
+      jest.spyOn(MongoClient, 'connect')
+        .mockResolvedValueOnce(bdMock);
 
       await chatController.clientAdminMessage(mockReqBody, mockRes, mockNext);
 
@@ -169,7 +171,8 @@ describe('chatController tests', () => {
       const mockRes = { status: jest.fn().mockReturnValueOnce(mockEnd) };
 
       const bdMock = mockGetDB(mockResponse);
-      MongoClient.connect.mockResolvedValueOnce(bdMock);
+      jest.spyOn(MongoClient, 'connect')
+        .mockResolvedValueOnce(bdMock);
 
       jest
         .spyOn(ChatModel, 'updateEmailMessage')
@@ -207,7 +210,8 @@ describe('chatController tests', () => {
       const mockRes = { status: jest.fn().mockReturnValueOnce(mockEnd) };
 
       const bdMock = mockGetDB(mockResponse);
-      MongoClient.connect.mockResolvedValueOnce(bdMock);
+      jest.spyOn(MongoClient, 'connect')
+        .mockResolvedValueOnce(bdMock);
 
       jest
         .spyOn(ChatModel, 'emailSchemaExist')
@@ -248,15 +252,89 @@ describe('chatController tests', () => {
       expect(ChatModel.registerMessages).toBeCalledTimes(1);
     });
   });
-/*   describe('Testing getChatByEmail', () => {
+  describe('Testing getChatByEmail', () => {
     it('Test if service catch if client try acess other client history', async () => {
+      const mockResponse = [
+        {
+          messages: [
+            {
+              chatName: 'cliente@cliente.com',
+              sentMessage: 'fala mano',
+              time: 1600205240920,
+            },
+          ],
+        },
+      ];
       const mockReq = {
         params: { email: 'cliente2@cliente.com' },
         user: { email: 'cliente@cliente.com', role: 'client' },
       };
       const mockJson = jest.fn();
       const mockNext = jest.fn();
+      const mockRes = { status: jest.fn().mockReturnValueOnce({ json: mockJson }) };
 
-    })
-  }) */
+      jest
+        .spyOn(ChatModel, 'findClientByEmail')
+        .mockReturnValueOnce(mockResponse);
+
+      await chatController.getChatByEmail(mockReq, mockRes, mockNext);
+
+      expect(mockNext).toBeCalledTimes(1);
+      expect(ChatModel.findClientByEmail).toBeCalledTimes(0);
+    });
+    it('Test if returning status code 200 and an json', async () => {
+      const mockResponse = [
+        {
+          messages: [
+            {
+              chatName: 'cliente@cliente.com',
+              sentMessage: 'fala mano',
+              time: 1600205240920,
+            },
+          ],
+        },
+      ];
+      const mockReq = {
+        params: { email: 'cliente2@cliente.com' },
+        user: { email: 'cliente2@cliente.com', role: 'client' },
+      };
+      const mockJson = jest.fn();
+      const mockNext = jest.fn();
+      const mockRes = { status: jest.fn().mockReturnValueOnce({ json: mockJson }) };
+
+      jest.restoreAllMocks();
+
+      const bdMock = mockGetDB(mockResponse);
+      jest.spyOn(MongoClient, 'connect')
+        .mockResolvedValueOnce(bdMock);
+
+      await chatController.getChatByEmail(mockReq, mockRes, mockNext);
+
+      expect(mockNext).toBeCalledTimes(0);
+      expect(MongoClient.connect).toBeCalledTimes(1);
+      expect(mockRes.status).toBeCalledWith(200);
+    });
+    it('Test if bd isnt responding', async () => {
+      const mockReq = {
+        params: { email: 'cliente2@cliente.com' },
+        user: { email: 'cliente2@cliente.com', role: 'client' },
+      };
+      const mockJson = jest.fn();
+      const mockNext = jest.fn();
+      const mockRes = { status: jest.fn().mockReturnValueOnce({ json: mockJson }) };
+
+      jest.restoreAllMocks();
+
+      jest
+        .spyOn(ChatModel, 'findClientByEmail')
+        .mockImplementationOnce(() => {
+          throw new Error('internal_error');
+        });
+
+      await chatController.getChatByEmail(mockReq, mockRes, mockNext);
+
+      expect(mockNext).toBeCalledTimes(1);
+      expect(ChatModel.findClientByEmail).toBeCalledTimes(1);
+    });
+  });
 });
