@@ -63,7 +63,7 @@ const getAllChats = async () => {
           _id: 0, email: '$_id', time: { $arrayElemAt: ['$messages.time', -1] },
         },
       },
-      { $sort: { time: 1 } },
+      { $sort: { time: -1 } },
     ]).toArray();
   return modelAnswer;
 };

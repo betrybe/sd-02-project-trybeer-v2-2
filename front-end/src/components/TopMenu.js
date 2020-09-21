@@ -38,9 +38,12 @@ export default function TopMenu() {
         '/login',
         '/admin/profile',
         '/admin/orders',
+        '/admin/chats',
         '/admin/chat',
       ];
-      if (dontDisplay.find((path) => pathname === path)) {
+      if (dontDisplay.find((path) => pathname === path)
+      || pathname.match(new RegExp('/admin/orders/.*', 'g'))
+      ) {
         setDisplayTopMenu(false);
         setHeaderTitle('hidden');
       }

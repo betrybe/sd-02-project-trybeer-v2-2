@@ -29,7 +29,7 @@ const Conversations = () => {
   return (
     <div className="containerAllChats">
       <AdminSideBar />
-      <div>
+      <div className="all-chats-container">
         {chats.length === 0
           ? (
             <div className="noMsg" data-testid="text-for-no-conversation">

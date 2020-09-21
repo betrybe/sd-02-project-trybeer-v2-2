@@ -72,13 +72,11 @@ const ClientChat = ({ history }) => {
 
   useEffect(() => {
     const fetchChats = async () => {
-      const allChats = await requestChats(history);
-      setChats(allChats.find(({ email }) => userData.email === email));
+      const allChats = await requestChats(history, userData.email);
+      setChats(allChats);
     };
     fetchChats();
-  }, []);
-
-  console.log(chats);
+  }, [userData.email, history]);
 
   return (
     <div className="firstContainer">

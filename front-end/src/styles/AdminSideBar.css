@@ -44,3 +44,22 @@
   margin-bottom: 20%;
   width: 100%;
 }
+
+@media ( max-width : 800px ) {
+
+  .admin-side-bar-header {
+    font-size: 3vh;
+  }
+
+  .admin-side-bar-mid button {
+    font-size: 3vh;
+  }
+
+  .admin-side-bar-bot button {
+    font-size: 3vh;
+  }
+
+  .admin-side-bar-container {
+    width: 30vw;
+  }
+}
